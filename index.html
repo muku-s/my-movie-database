@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>My Movie Database</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+    <!-- Chart.js -->
+    <script
+        src="https://cdn.jsdelivr.net/npm/chart.js"
+    ></script>
+
+</head>
+
+
+<body>
+    <!-- ====================
+     ログイン画面
+==================== -->
+
+<div id="loginScreen">
+
+    <div class="login-box">
+
+        <h2>
+            MY MOVIE DATABASE
+        </h2>
+
+        <p>
+            ログインしてください
+        </p>
+
+        <input
+            type="email"
+            id="loginEmail"
+            placeholder="メールアドレス"
+        >
+
+        <input
+            type="password"
+            id="loginPassword"
+            placeholder="パスワード"
+        >
+
+        <button
+            onclick="login()"
+        >
+            ログイン
+        </button>
+
+        <p id="loginError"></p>
+
+    </div>
+
+</div>
+
+
+    <!-- ====================
+         ヘッダー
+    ==================== -->
+
+    <!-- ====================
+     アプリ本体
+==================== -->
+
+<div id="appContent">
+
+    <!-- ====================
+         ヘッダー
+    ==================== -->
+
+    <header>
+
+        <h1>MY MOVIE DATABASE</h1>
+
+        <p>
+            自分だけの映画記録
+        </p>
+
+        <button onclick="logout()">
+    ログアウト
+</button>
+
+    </header>
+
+
+    <main>
+
+
+        <!-- ====================
+             映画検索
+        ==================== -->
+
+        <section class="search-area">
+
+            <h2>映画を検索</h2>
+
+
+            <!-- 作品名・監督名 -->
+
+            <input
+                type="text"
+                id="searchTitle"
+                placeholder="映画名・監督名を入力"
+            >
+
+
+            <div class="filters">
+
+
+                <!-- 監督 -->
+
+                <div>
+
+                    <label for="searchDirector">
+                        監督
+                    </label>
+
+                    <select id="searchDirector">
+
+                        <option value="">
+                            すべて
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- 制作国 -->
+
+                <div>
+
+                    <label for="searchCountry">
+                        制作国
+                    </label>
+
+                    <select id="searchCountry">
+
+                        <option value="">
+                            すべて
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- 公開年 -->
+
+                <div class="year-range">
+
+                    <label>
+                        公開年
+                    </label>
+
+
+                    <div class="year-inputs">
+
+                        <input
+                            type="number"
+                            id="searchYearFrom"
+                            placeholder="開始年"
+                            min="1800"
+                            max="2100"
+                        >
+
+
+                        <span>
+                            〜
+                        </span>
+
+
+                        <input
+                            type="number"
+                            id="searchYearTo"
+                            placeholder="終了年"
+                            min="1800"
+                            max="2100"
+                        >
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ジャンル -->
+
+                <div>
+
+                    <label for="searchGenre">
+                        ジャンル
+                    </label>
+
+                    <select id="searchGenre">
+
+                        <option value="">
+                            すべて
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- タグ -->
+
+                <div>
+
+                    <label for="searchTag">
+                        タグ
+                    </label>
+
+                    <select id="searchTag">
+
+                        <option value="">
+                            すべて
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+            </div>
+
+
+            <!-- 検索ボタン -->
+
+            <button
+                onclick="searchMovies()"
+            >
+                検索
+            </button>
+
+
+            <!-- リセット -->
+
+            <button
+                class="reset-button"
+                onclick="resetSearch()"
+            >
+                リセット
+            </button>
+
+
+        </section>
+
+
+
+        <!-- ====================
+             映画一覧
+        ==================== -->
+
+        <section class="movie-list">
+
+
+            <div class="list-header">
+
+                <h2>
+                    映画一覧
+                </h2>
+
+
+                <span id="movieCount">
+                    0作品
+                </span>
+
+            </div>
+
+
+            <div
+                id="movieContainer"
+            ></div>
+
+
+        </section>
+
+
+
+        <!-- ====================
+             映画登録
+        ==================== -->
+
+        <section class="add-area">
+
+            <h2>
+                映画を登録
+            </h2>
+
+
+            <!-- 作品名 -->
+
+            <input
+                type="text"
+                id="movieTitle"
+                placeholder="作品名"
+            >
+
+
+            <!-- 監督 -->
+
+            <input
+                type="text"
+                id="movieDirector"
+                placeholder="監督"
+            >
+
+
+            <!-- 公開年 -->
+
+            <input
+                type="number"
+                id="movieYear"
+                placeholder="公開年"
+                min="1800"
+                max="2100"
+            >
+
+
+            <!-- 制作国 -->
+
+            <input
+                type="text"
+                id="movieCountry"
+                placeholder="制作国"
+            >
+
+
+            <!-- 鑑賞日 -->
+
+            <input
+                type="date"
+                id="movieDate"
+            >
+
+
+            <!-- 評価 -->
+
+            <select
+                id="movieRating"
+            >
+
+                <option value="">
+                    評価なし
+                </option>
+
+                <option value="1">
+                    ★
+                </option>
+
+                <option value="2">
+                    ★★
+                </option>
+
+                <option value="3">
+                    ★★★
+                </option>
+
+                <option value="4">
+                    ★★★★
+                </option>
+
+                <option value="5">
+                    ★★★★★
+                </option>
+
+            </select>
+
+
+
+            <!-- ポスター -->
+
+            <input
+                type="file"
+                id="moviePoster"
+                accept="image/*"
+            >
+
+
+
+            <!-- ジャンル -->
+
+            <input
+                type="text"
+                id="movieGenre"
+                placeholder="ジャンル（例：ドラマ、SF、コメディ）"
+            >
+
+
+
+            <!-- 出演者 -->
+
+            <input
+                type="text"
+                id="movieCast"
+                placeholder="出演者（例：俳優A、俳優B）"
+            >
+
+
+
+            <!-- タグ -->
+
+            <input
+                type="text"
+                id="movieTags"
+                placeholder="タグ（例：お気に入り、もう一度見たい）"
+            >
+
+
+
+            <!-- 感想 -->
+
+            <textarea
+                id="movieMemo"
+                placeholder="感想・メモ"
+            ></textarea>
+
+
+
+            <!-- 登録ボタン -->
+
+            <button
+                onclick="addMovie()"
+            >
+                映画を登録する
+            </button>
+
+
+        </section>
+
+
+
+        <!-- ====================
+             鑑賞統計
+        ==================== -->
+
+        <section class="statistics-section">
+
+            <h2>
+                鑑賞統計
+            </h2>
+
+
+            <div class="statistics-grid">
+
+
+                <!-- 監督別 -->
+
+                <div class="chart-box">
+
+                    <h3>
+                        監督別
+                    </h3>
+
+
+                    <div class="chart-container">
+
+                        <canvas
+                            id="directorChart"
+                        ></canvas>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- 制作国別 -->
+
+                <div class="chart-box">
+
+                    <h3>
+                        制作国別
+                    </h3>
+
+
+                    <div class="chart-container">
+
+                        <canvas
+                            id="countryChart"
+                        ></canvas>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- 公開年代別 -->
+
+                <div class="chart-box">
+
+                    <h3>
+                        公開年代別
+                    </h3>
+
+
+                    <div class="chart-container">
+
+                        <canvas
+                            id="yearChart"
+                        ></canvas>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ====================
+             映画詳細モーダル
+        ==================== -->
+
+        <div
+            id="movieModal"
+            class="modal"
+        >
+
+
+            <div class="modal-content">
+
+
+                <button
+                    class="close-button"
+                    onclick="closeMovieModal()"
+                >
+                    ×
+                </button>
+
+
+                <div
+                    id="movieDetail"
+                ></div>
+
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- ====================
+             映画編集モーダル
+        ==================== -->
+
+        <div
+            id="editModal"
+            class="modal"
+        >
+
+
+            <div class="modal-content">
+
+
+                <button
+                    class="close-button"
+                    onclick="closeEditModal()"
+                >
+                    ×
+                </button>
+
+
+                <h2>
+                    映画を編集
+                </h2>
+
+
+
+                <!-- 作品名 -->
+
+                <input
+                    type="text"
+                    id="editTitle"
+                    placeholder="作品名"
+                >
+
+
+
+                <!-- 監督 -->
+
+                <input
+                    type="text"
+                    id="editDirector"
+                    placeholder="監督"
+                >
+
+
+
+                <!-- 公開年 -->
+
+                <input
+                    type="number"
+                    id="editYear"
+                    placeholder="公開年"
+                    min="1800"
+                    max="2100"
+                >
+
+
+
+                <!-- 制作国 -->
+
+                <input
+                    type="text"
+                    id="editCountry"
+                    placeholder="制作国"
+                >
+
+
+
+                <!-- 鑑賞日 -->
+
+                <input
+                    type="date"
+                    id="editDate"
+                >
+
+
+
+                <!-- 評価 -->
+
+                <select
+                    id="editRating"
+                >
+
+                    <option value="">
+                        評価なし
+                    </option>
+
+                    <option value="1">
+                        ★
+                    </option>
+
+                    <option value="2">
+                        ★★
+                    </option>
+
+                    <option value="3">
+                        ★★★
+                    </option>
+
+                    <option value="4">
+                        ★★★★
+                    </option>
+
+                    <option value="5">
+                        ★★★★★
+                    </option>
+
+                </select>
+
+
+
+                <!-- ジャンル -->
+
+                <input
+                    type="text"
+                    id="editGenre"
+                    placeholder="ジャンル"
+                >
+
+
+
+                <!-- 出演者 -->
+
+                <input
+                    type="text"
+                    id="editCast"
+                    placeholder="出演者"
+                >
+
+
+
+                <!-- タグ -->
+
+                <input
+                    type="text"
+                    id="editTags"
+                    placeholder="タグ"
+                >
+
+
+
+                <!-- ポスター -->
+
+                <input
+                    type="file"
+                    id="editPoster"
+                    accept="image/*"
+                >
+
+
+
+                <!-- 感想 -->
+
+                <textarea
+                    id="editMemo"
+                    placeholder="感想・メモ"
+                ></textarea>
+
+
+
+                <!-- 保存 -->
+
+                <button
+                    onclick="saveEdit()"
+                >
+                    変更を保存
+                </button>
+
+
+            </div>
+
+
+        </div>
+
+
+    </main>
+</div>
+
+
+    <!-- ====================
+         JavaScript
+    ==================== -->
+
+   <script
+    src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+></script>
+
+<script
+    src="script.js"
+></script>
+
+
+</body>
+
+</html>

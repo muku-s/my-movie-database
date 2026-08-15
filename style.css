@@ -1,0 +1,619 @@
+#appContent {
+    display: none;
+}
+
+#loginScreen {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-box {
+    width: 90%;
+    max-width: 400px;
+    padding: 30px;
+    text-align: center;
+}
+
+.login-box input {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 10px 0;
+}
+
+.login-box button {
+    width: 100%;
+    margin-top: 10px;
+}
+
+#loginError {
+    color: red;
+}
+/* ====================
+   全体
+==================== */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+
+    background: #f3ede3;
+
+    color: #332a24;
+
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Helvetica Neue",
+        Arial,
+        sans-serif;
+
+    line-height: 1.6;
+}
+
+
+/* ====================
+   ヘッダー
+==================== */
+
+header {
+    background: #3b3028;
+
+    color: #fffdf8;
+
+    text-align: center;
+
+    padding: 40px 20px;
+
+    border-bottom:
+        4px solid #9a7659;
+}
+
+header h1 {
+    margin: 0;
+
+    font-size: 30px;
+
+    letter-spacing: 3px;
+}
+
+header p {
+    margin: 8px 0 0;
+
+    color: #d8cbb9;
+}
+
+
+/* ====================
+   メイン
+==================== */
+
+main {
+    width: min(1000px, 92%);
+
+    margin: 40px auto;
+}
+
+
+/* ====================
+   セクション
+==================== */
+
+section {
+    background: #fffdf8;
+
+    padding: 30px;
+
+    margin-bottom: 30px;
+
+    border-radius: 10px;
+
+    border: 1px solid #d8cbb9;
+
+    box-shadow:
+        0 2px 10px
+        rgba(70, 50, 35, 0.06);
+}
+
+section h2 {
+    margin-top: 0;
+
+    margin-bottom: 20px;
+
+    color: #3b3028;
+}
+
+
+/* ====================
+   入力フォーム
+==================== */
+
+input,
+select,
+textarea {
+    width: 100%;
+
+    padding: 12px;
+
+    margin-bottom: 12px;
+
+    border:
+        1px solid #cdbda9;
+
+    border-radius: 5px;
+
+    font-size: 14px;
+
+    font-family: inherit;
+
+    background: #fffdf8;
+
+    color: #332a24;
+}
+
+textarea {
+    min-height: 120px;
+
+    resize: vertical;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+
+    border-color: #9a7659;
+
+    box-shadow:
+        0 0 0 2px
+        rgba(154, 118, 89, 0.12);
+}
+
+
+/* ====================
+   検索
+==================== */
+
+.filters {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 15px;
+
+    margin-top: 15px;
+}
+
+.filters label {
+    display: block;
+
+    margin-bottom: 5px;
+
+    font-size: 13px;
+
+    color: #766556;
+}
+
+
+/* ====================
+   ボタン
+==================== */
+
+button {
+    border: none;
+
+    background: #6b5142;
+
+    color: #fffdf8;
+
+    padding: 11px 20px;
+
+    border-radius: 5px;
+
+    cursor: pointer;
+
+    font-size: 14px;
+
+    transition:
+        background 0.15s,
+        transform 0.1s;
+}
+
+button:hover {
+    background: #513c31;
+}
+
+button:active {
+    transform: translateY(1px);
+}
+
+.reset-button {
+    background: #9b8a78;
+
+    margin-left: 5px;
+}
+
+.reset-button:hover {
+    background: #7f6e5d;
+}
+
+
+/* ====================
+   映画一覧
+==================== */
+
+.list-header {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+}
+
+.list-header h2 {
+    margin-bottom: 0;
+}
+
+#movieCount {
+    color: #8a7968;
+
+    font-size: 14px;
+}
+
+
+/* ====================
+   映画カード
+==================== */
+
+.movie-card {
+    display: flex;
+
+    gap: 15px;
+
+    border-top:
+        1px solid #ded3c5;
+
+    padding: 15px 0;
+
+    cursor: pointer;
+
+    transition:
+        background 0.15s,
+        padding-left 0.15s;
+}
+
+.movie-card:hover {
+    background: #faf6ef;
+
+    padding-left: 5px;
+}
+
+.movie-poster {
+    width: 50px !important;
+
+    height: 70px !important;
+
+    object-fit: cover;
+
+    border-radius: 3px;
+
+    background: #ded3c5;
+
+    flex-shrink: 0;
+}
+
+.movie-card-content {
+    flex: 1;
+}
+
+.movie-card h3 {
+    margin-top: 0;
+
+    margin-bottom: 5px;
+
+    font-size: 17px;
+
+    color: #3b3028;
+}
+
+.movie-info {
+    font-size: 13px;
+
+    color: #8a7968;
+}
+
+.movie-rating {
+    margin-top: 5px;
+
+    color: #9a7659;
+
+    letter-spacing: 2px;
+}
+
+
+/* ====================
+   モーダル
+==================== */
+
+.modal {
+    display: none;
+
+    position: fixed;
+
+    z-index: 1000;
+
+    left: 0;
+
+    top: 0;
+
+    width: 100%;
+
+    height: 100%;
+
+    background:
+        rgba(55, 42, 32, 0.72);
+
+    overflow-y: auto;
+}
+
+.modal-content {
+    background: #fffdf8;
+
+    width: min(800px, 90%);
+
+    margin: 60px auto;
+
+    padding: 35px;
+
+    border-radius: 10px;
+
+    position: relative;
+
+    border:
+        1px solid #d8cbb9;
+}
+
+.close-button {
+    position: absolute;
+
+    right: 20px;
+
+    top: 15px;
+
+    font-size: 28px;
+
+    background: none;
+
+    color: #6b5142;
+
+    padding: 0;
+}
+
+.close-button:hover {
+    background: none;
+
+    color: #3b3028;
+}
+
+
+/* ====================
+   詳細画面
+==================== */
+
+.detail-layout {
+    display: flex;
+
+    gap: 30px;
+}
+
+.detail-poster {
+    width: 180px;
+
+    max-height: 270px;
+
+    object-fit: cover;
+
+    border-radius: 4px;
+
+    background: #ded3c5;
+
+    flex-shrink: 0;
+}
+
+.detail-info {
+    flex: 1;
+}
+
+.detail-info h2 {
+    font-size: 28px;
+
+    margin-top: 0;
+
+    padding-bottom: 10px;
+
+    border-bottom:
+        2px solid #9a7659;
+
+    color: #3b3028;
+}
+
+.detail-info p {
+    margin: 8px 0;
+}
+
+.detail-memo {
+    margin-top: 25px;
+
+    padding-top: 20px;
+
+    border-top:
+        1px solid #ded3c5;
+
+    line-height: 1.8;
+
+    white-space: pre-wrap;
+}
+
+.edit-button {
+    background: #3b3028;
+
+    margin-right: 5px;
+}
+
+.edit-button:hover {
+    background: #241c17;
+}
+
+.delete-button {
+    background: #80604b;
+}
+
+.delete-button:hover {
+    background: #624735;
+}
+
+
+/* ====================
+   統計
+==================== */
+
+.statistics-section h2 {
+    margin-bottom: 25px;
+
+    padding-bottom: 10px;
+
+    border-bottom:
+        2px solid #9a7659;
+}
+
+.statistics-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 25px;
+}
+
+.chart-box {
+    border:
+        1px solid #d8cbb9;
+
+    border-radius: 8px;
+
+    padding: 20px;
+
+    background: #faf6ef;
+}
+
+.chart-box h3 {
+    margin-top: 0;
+
+    margin-bottom: 15px;
+
+    font-size: 17px;
+
+    color: #4a382d;
+}
+
+.chart-container {
+    position: relative;
+
+    width: 100%;
+
+    height: 300px;
+}
+
+.chart-box:last-child {
+    grid-column: 1 / -1;
+}
+
+
+/* ====================
+   スクロールバー
+==================== */
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #e8ded1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #8a7563;
+
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #6b5142;
+}
+
+
+/* ====================
+   スマートフォン
+==================== */
+
+@media (max-width: 700px) {
+
+    main {
+        width: 94%;
+
+        margin: 20px auto;
+    }
+
+    section {
+        padding: 20px;
+    }
+
+    header {
+        padding: 30px 15px;
+    }
+
+    header h1 {
+        font-size: 23px;
+
+        letter-spacing: 2px;
+    }
+
+    .filters {
+        grid-template-columns: 1fr;
+    }
+
+    .detail-layout {
+        flex-direction: column;
+    }
+
+    .detail-poster {
+        width: 150px;
+
+        max-height: 225px;
+    }
+
+    .movie-poster {
+        width: 50px !important;
+
+        height: 70px !important;
+    }
+
+    .statistics-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .chart-box:last-child {
+        grid-column: auto;
+    }
+
+    .chart-container {
+        height: 280px;
+    }
+
+}
