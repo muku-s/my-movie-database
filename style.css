@@ -2,11 +2,27 @@
     display: none;
 }
 
+/* ====================
+   ログイン画面
+==================== */
+
 #loginScreen {
     min-height: 100vh;
+    width: 100%;
+
     display: flex;
     justify-content: center;
     align-items: center;
+
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+#loginScreen .login-box {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    box-sizing: border-box;
 }
 
 .login-box {
