@@ -7,12 +7,20 @@ const SUPABASE_URL = "https://ehwimuxrzytkwacnrcay.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY =
     "sb_publishable_k8ofYICStjAsHmAGQIBNYQ_s-_jgcGR";
 
-
 const supabaseClient =
     supabase.createClient(
         SUPABASE_URL,
         SUPABASE_PUBLISHABLE_KEY
     );
+
+
+// ====================
+// 映画データ
+// ====================
+
+let movies = [];
+let editingMovieId = null;
+
 
 // ====================
 // 映画の並び替え
@@ -25,7 +33,6 @@ function sortMovieList(movieList) {
 
     const sorted =
         [...movieList];
-
 
     sorted.sort(function(a, b) {
 
@@ -128,11 +135,9 @@ function sortMovieList(movieList) {
             case "year-newest":
 
                 return (
-                    Number(b.year) ||
-                    0
+                    Number(b.year) || 0
                 ) - (
-                    Number(a.year) ||
-                    0
+                    Number(a.year) || 0
                 );
 
 
@@ -143,11 +148,9 @@ function sortMovieList(movieList) {
             case "year-oldest":
 
                 return (
-                    Number(a.year) ||
-                    9999
+                    Number(a.year) || 9999
                 ) - (
-                    Number(b.year) ||
-                    9999
+                    Number(b.year) || 9999
                 );
 
 
@@ -158,26 +161,22 @@ function sortMovieList(movieList) {
             case "rating":
 
                 return (
-                    Number(b.rating) ||
-                    0
+                    Number(b.rating) || 0
                 ) - (
-                    Number(a.rating) ||
-                    0
+                    Number(a.rating) || 0
                 );
 
 
             default:
 
                 return Number(b.id) -
-                       Number(a.id);
+                    Number(a.id);
 
         }
 
     });
 
-
     return sorted;
-
 }
 
 
@@ -185,7 +184,6 @@ function changeSort(sortType) {
 
     currentSort =
         sortType;
-
 
     displayMovies(
         movies
@@ -257,6 +255,8 @@ function imageToDataURL(file) {
     });
 
 }
+
+
 // ====================
 // ポスターをSupabase Storageへアップロード
 // ====================
@@ -269,14 +269,12 @@ async function uploadPoster(file) {
 
     }
 
-
     // ファイル名が重複しないようにする
 
     const extension =
         file.name
             .split(".")
             .pop();
-
 
     const fileName =
         Date.now() +
@@ -287,10 +285,8 @@ async function uploadPoster(file) {
         "." +
         extension;
 
-
     const filePath =
         fileName;
-
 
     // Storageへアップロード
 
@@ -304,7 +300,6 @@ async function uploadPoster(file) {
             file
         );
 
-
     if (error) {
 
         console.error(
@@ -316,13 +311,10 @@ async function uploadPoster(file) {
 
     }
 
+    return filePath;
 
-return filePath;
 }
 
-// ====================
-// 映画登録
-// ====================
 
 // ====================
 // 映画登録
@@ -353,25 +345,25 @@ async function addMovie() {
             .value
             .trim();
 
-const dateValue =
-    document
-        .getElementById("movieDate")
-        .value;
+    const dateValue =
+        document
+            .getElementById("movieDate")
+            .value;
 
-const date =
-    dateValue === ""
-        ? null
-        : dateValue;
+    const date =
+        dateValue === ""
+            ? null
+            : dateValue;
 
-const ratingValue =
-    document
-        .getElementById("movieRating")
-        .value;
+    const ratingValue =
+        document
+            .getElementById("movieRating")
+            .value;
 
-const rating =
-    ratingValue === ""
-        ? null
-        : Number(ratingValue);
+    const rating =
+        ratingValue === ""
+            ? null
+            : Number(ratingValue);
 
     const genre =
         document
@@ -422,10 +414,10 @@ const rating =
     // ポスター画像
     // --------------------
 
-const poster =
-    await uploadPoster(
-        posterFile
-    );
+    const poster =
+        await uploadPoster(
+            posterFile
+        );
 
 
     // --------------------
@@ -493,7 +485,6 @@ const poster =
 
     movies.unshift(data);
 
-
     clearForm();
 
     updateFilters();
@@ -501,7 +492,6 @@ const poster =
     displayMovies(movies);
 
     updateStatistics();
-
 
     alert(
         "映画を登録しました！"
@@ -520,51 +510,41 @@ function clearForm() {
         .getElementById("movieTitle")
         .value = "";
 
-
     document
         .getElementById("movieDirector")
         .value = "";
-
 
     document
         .getElementById("movieYear")
         .value = "";
 
-
     document
         .getElementById("movieCountry")
         .value = "";
-
 
     document
         .getElementById("movieDate")
         .value = "";
 
-
     document
         .getElementById("movieRating")
         .value = "";
-
 
     document
         .getElementById("movieGenre")
         .value = "";
 
-
     document
         .getElementById("movieCast")
         .value = "";
-
 
     document
         .getElementById("movieTags")
         .value = "";
 
-
     document
         .getElementById("moviePoster")
         .value = "";
-
 
     document
         .getElementById("movieMemo")
@@ -574,15 +554,17 @@ function clearForm() {
 
 
 // ====================
-// 映画一覧表示
+// ポスターURL取得
 // ====================
+
 async function getPosterUrl(posterPath) {
 
     if (!posterPath) {
+
         return "";
+
     }
 
-    // 古い公開URLが保存されている場合にも対応
     let filePath = posterPath;
 
     try {
@@ -602,7 +584,9 @@ async function getPosterUrl(posterPath) {
                 posterUrl.pathname;
 
             const index =
-                pathname.indexOf(pathPrefix);
+                pathname.indexOf(
+                    pathPrefix
+                );
 
             if (index !== -1) {
 
@@ -655,10 +639,12 @@ async function getPosterUrl(posterPath) {
     return data.signedUrl;
 
 }
-async function displayMovies(movieList) {
 
-    const container =
-        document.getElementById(
+
+// ====================
+// 映画一覧表示
+// ====================
+
 async function displayMovies(movieList) {
 
     movieList =
@@ -666,15 +652,12 @@ async function displayMovies(movieList) {
             movieList
         );
 
-
     const container =
         document.getElementById(
             "movieContainer"
         );
 
-
     container.innerHTML = "";
-
 
     document.getElementById(
         "movieCount"
@@ -699,7 +682,6 @@ async function displayMovies(movieList) {
                 "div"
             );
 
-
         card.className =
             "movie-card";
 
@@ -708,33 +690,33 @@ async function displayMovies(movieList) {
         // ポスターURLを取得
         // --------------------
 
-let detailPosterUrl = "";
+        let detailPosterUrl = "";
 
-if (movie.poster) {
+        if (movie.poster) {
 
-    detailPosterUrl =
-        await getPosterUrl(
-            movie.poster
-        );
+            detailPosterUrl =
+                await getPosterUrl(
+                    movie.poster
+                );
 
-}
+        }
 
 
-const posterHTML =
-    detailPosterUrl
+        const posterHTML =
+            detailPosterUrl
 
-        ? `
-            <img
-                src="${detailPosterUrl}"
-                class="detail-poster"
-            >
-          `
+                ? `
+                    <img
+                        src="${detailPosterUrl}"
+                        class="detail-poster"
+                    >
+                  `
 
-        : `
-            <div
-                class="detail-poster"
-            ></div>
-          `;
+                : `
+                    <div
+                        class="detail-poster"
+                    ></div>
+                  `;
 
 
         const stars =
@@ -742,7 +724,7 @@ const posterHTML =
 
                 ? "★".repeat(
                     Number(movie.rating)
-                  )
+                )
 
                 : "";
 
@@ -760,7 +742,6 @@ const posterHTML =
                         movie.title
                     )}
                 </h3>
-
 
                 <div
                     class="movie-info"
@@ -789,7 +770,6 @@ const posterHTML =
                     )}
 
                 </div>
-
 
                 <div
                     class="movie-rating"
@@ -851,31 +831,34 @@ async function openMovieDetail(id) {
             "movieDetail"
         );
 
-let detailPosterUrl = "";
 
-if (movie.poster) {
+    let detailPosterUrl = "";
 
-    detailPosterUrl =
-        await getPosterUrl(
-            movie.poster
-        );
+    if (movie.poster) {
 
-}
-const posterHTML =
-    detailPosterUrl
+        detailPosterUrl =
+            await getPosterUrl(
+                movie.poster
+            );
 
-        ? `
-            <img
-                src="${detailPosterUrl}"
-                class="detail-poster"
-            >
-          `
+    }
 
-        : `
-            <div
-                class="detail-poster"
-            ></div>
-          `;
+
+    const posterHTML =
+        detailPosterUrl
+
+            ? `
+                <img
+                    src="${detailPosterUrl}"
+                    class="detail-poster"
+                >
+              `
+
+            : `
+                <div
+                    class="detail-poster"
+                ></div>
+              `;
 
 
     const stars =
@@ -883,7 +866,7 @@ const posterHTML =
 
             ? "★".repeat(
                 Number(movie.rating)
-              )
+            )
 
             : "評価なし";
 
@@ -896,7 +879,6 @@ const posterHTML =
 
             ${posterHTML}
 
-
             <div
                 class="detail-info"
             >
@@ -906,7 +888,6 @@ const posterHTML =
                         movie.title
                     )}
                 </h2>
-
 
                 <p>
 
@@ -921,7 +902,6 @@ const posterHTML =
 
                 </p>
 
-
                 <p>
 
                     <strong>
@@ -934,7 +914,6 @@ const posterHTML =
                     )}
 
                 </p>
-
 
                 <p>
 
@@ -949,7 +928,6 @@ const posterHTML =
 
                 </p>
 
-
                 <p>
 
                     <strong>
@@ -962,7 +940,6 @@ const posterHTML =
                     )}
 
                 </p>
-
 
                 <p>
 
@@ -977,7 +954,6 @@ const posterHTML =
 
                 </p>
 
-
                 <p>
 
                     <strong>
@@ -991,7 +967,6 @@ const posterHTML =
 
                 </p>
 
-
                 <p>
 
                     <strong>
@@ -1004,7 +979,6 @@ const posterHTML =
                     )}
 
                 </p>
-
 
                 <p>
 
@@ -1028,7 +1002,6 @@ const posterHTML =
             <h3>
                 感想・メモ
             </h3>
-
 
             ${escapeHTML(
                 movie.memo ||
@@ -1184,10 +1157,6 @@ function openEditModal(id) {
 // 編集保存
 // ====================
 
-// ====================
-// 編集保存
-// ====================
-
 async function saveEdit() {
 
     const title =
@@ -1232,26 +1201,28 @@ async function saveEdit() {
             .trim();
 
 
-const dateValue =
-    document
-        .getElementById("editDate")
-        .value;
-
-const date =
-    dateValue === ""
-        ? null
-        : dateValue;
+    const dateValue =
+        document
+            .getElementById("editDate")
+            .value;
 
 
-const ratingValue =
-    document
-        .getElementById("editRating")
-        .value;
+    const date =
+        dateValue === ""
+            ? null
+            : dateValue;
 
-const rating =
-    ratingValue === ""
-        ? null
-        : Number(ratingValue);
+
+    const ratingValue =
+        document
+            .getElementById("editRating")
+            .value;
+
+
+    const rating =
+        ratingValue === ""
+            ? null
+            : Number(ratingValue);
 
 
     const genre =
@@ -1292,17 +1263,17 @@ const rating =
             .files[0];
 
 
-let poster = null;
+    let poster = null;
 
 
-if (posterFile) {
+    if (posterFile) {
 
-    poster =
-        await uploadPoster(
-            posterFile
-        );
+        poster =
+            await uploadPoster(
+                posterFile
+            );
 
-}
+    }
 
 
     // --------------------
@@ -1336,114 +1307,114 @@ if (posterFile) {
 
     // ポスターを変更した場合だけ更新
 
-if (posterFile) {
+    if (posterFile) {
 
-    // --------------------
-    // 古いポスターをStorageから削除
-    // --------------------
+        // --------------------
+        // 古いポスターをStorageから削除
+        // --------------------
 
-    if (editingMovieId) {
+        if (editingMovieId) {
 
-        const oldMovie =
-            movies.find(function(movie) {
+            const oldMovie =
+                movies.find(function(movie) {
 
-                return movie.id === editingMovieId;
+                    return movie.id === editingMovieId;
 
-            });
-
-
-        if (
-            oldMovie &&
-            oldMovie.poster
-        ) {
-
-            try {
-
-                let oldFilePath =
-                    oldMovie.poster;
+                });
 
 
-                // 古い公開URL形式にも対応
+            if (
+                oldMovie &&
+                oldMovie.poster
+            ) {
 
-                if (
-                    oldMovie.poster.startsWith("http://") ||
-                    oldMovie.poster.startsWith("https://")
-                ) {
+                try {
 
-                    const oldPosterUrl =
-                        new URL(
-                            oldMovie.poster
-                        );
+                    let oldFilePath =
+                        oldMovie.poster;
 
-                    const pathPrefix =
-                        "/storage/v1/object/public/movie-posters/";
 
-                    const pathname =
-                        oldPosterUrl.pathname;
+                    // 古い公開URL形式にも対応
 
-                    const index =
-                        pathname.indexOf(
-                            pathPrefix
-                        );
+                    if (
+                        oldMovie.poster.startsWith("http://") ||
+                        oldMovie.poster.startsWith("https://")
+                    ) {
 
-                    if (index !== -1) {
-
-                        oldFilePath =
-                            decodeURIComponent(
-                                pathname.substring(
-                                    index +
-                                    pathPrefix.length
-                                )
+                        const oldPosterUrl =
+                            new URL(
+                                oldMovie.poster
                             );
+
+                        const pathPrefix =
+                            "/storage/v1/object/public/movie-posters/";
+
+                        const pathname =
+                            oldPosterUrl.pathname;
+
+                        const index =
+                            pathname.indexOf(
+                                pathPrefix
+                            );
+
+                        if (index !== -1) {
+
+                            oldFilePath =
+                                decodeURIComponent(
+                                    pathname.substring(
+                                        index +
+                                        pathPrefix.length
+                                    )
+                                );
+
+                        }
 
                     }
 
-                }
+
+                    const {
+                        error:
+                            oldPosterDeleteError
+                    } =
+                        await supabaseClient
+                            .storage
+                            .from("movie-posters")
+                            .remove([
+                                oldFilePath
+                            ]);
 
 
-                const {
-                    error:
+                    if (
                         oldPosterDeleteError
-                } =
-                    await supabaseClient
-                        .storage
-                        .from("movie-posters")
-                        .remove([
-                            oldFilePath
-                        ]);
+                    ) {
 
+                        console.error(
+                            "古いポスター削除エラー:",
+                            oldPosterDeleteError
+                        );
 
-                if (
-                    oldPosterDeleteError
-                ) {
+                    }
+
+                } catch (error) {
 
                     console.error(
-                        "古いポスター削除エラー:",
-                        oldPosterDeleteError
+                        "古いポスター削除処理エラー:",
+                        error
                     );
 
                 }
-
-            } catch (error) {
-
-                console.error(
-                    "古いポスター削除処理エラー:",
-                    error
-                );
 
             }
 
         }
 
+
+        // 新しいポスターを保存
+
+        updateData.poster =
+            poster;
+
     }
-
-
-    // 新しいポスターを保存
-
-    updateData.poster =
-        poster;
-
-}
 
 
     const {
@@ -1540,10 +1511,6 @@ function closeEditModal() {
 // 映画削除
 // ====================
 
-// ====================
-// 映画削除
-// ====================
-
 async function deleteMovie(id) {
 
     if (
@@ -1580,81 +1547,81 @@ async function deleteMovie(id) {
     // ポスターをStorageから削除
     // --------------------
 
- if (movie.poster) {
+    if (movie.poster) {
 
-    try {
+        try {
 
-        let filePath =
-            movie.poster;
+            let filePath =
+                movie.poster;
 
 
-        // 古い公開URLが保存されている場合に対応
+            // 古い公開URLが保存されている場合に対応
 
-        if (
-            movie.poster.startsWith("http://") ||
-            movie.poster.startsWith("https://")
-        ) {
+            if (
+                movie.poster.startsWith("http://") ||
+                movie.poster.startsWith("https://")
+            ) {
 
-            const posterUrl =
-                new URL(movie.poster);
+                const posterUrl =
+                    new URL(movie.poster);
 
-            const pathPrefix =
-                "/storage/v1/object/public/movie-posters/";
+                const pathPrefix =
+                    "/storage/v1/object/public/movie-posters/";
 
-            const pathname =
-                posterUrl.pathname;
+                const pathname =
+                    posterUrl.pathname;
 
-            const index =
-                pathname.indexOf(
-                    pathPrefix
-                );
-
-            if (index !== -1) {
-
-                filePath =
-                    decodeURIComponent(
-                        pathname.substring(
-                            index +
-                            pathPrefix.length
-                        )
+                const index =
+                    pathname.indexOf(
+                        pathPrefix
                     );
+
+                if (index !== -1) {
+
+                    filePath =
+                        decodeURIComponent(
+                            pathname.substring(
+                                index +
+                                pathPrefix.length
+                            )
+                        );
+
+                }
 
             }
 
-        }
+
+            const {
+                error:
+                    storageError
+            } =
+                await supabaseClient
+                    .storage
+                    .from("movie-posters")
+                    .remove([
+                        filePath
+                    ]);
 
 
-        const {
-            error:
-                storageError
-        } =
-            await supabaseClient
-                .storage
-                .from("movie-posters")
-                .remove([
-                    filePath
-                ]);
+            if (storageError) {
 
+                console.error(
+                    "ポスター削除エラー:",
+                    storageError
+                );
 
-        if (storageError) {
+            }
+
+        } catch (error) {
 
             console.error(
-                "ポスター削除エラー:",
-                storageError
+                "ポスター削除処理エラー:",
+                error
             );
 
         }
 
-    } catch (error) {
-
-        console.error(
-            "ポスター削除処理エラー:",
-            error
-        );
-
     }
-
-}
 
 
     // --------------------
@@ -2731,15 +2698,6 @@ function updateStatistics() {
 
 
 // ====================
-// アプリ起動
-// ====================
-
-updateFilters();
-
-displayMovies(movies);
-
-updateStatistics();
-// ====================
 // Supabase接続テスト
 // ====================
 
@@ -2747,6 +2705,8 @@ console.log(
     "Supabase接続準備完了",
     supabaseClient
 );
+
+
 // ====================
 // ログイン
 // ====================
@@ -2824,12 +2784,18 @@ async function login() {
         "appContent"
     ).style.display =
         "block";
-loadMovies();
+
+
+    loadMovies();
+
 }
+
+
 async function logout() {
 
     const { error } =
         await supabaseClient.auth.signOut();
+
 
     if (error) {
 
@@ -2846,15 +2812,21 @@ async function logout() {
 
     }
 
+
     document.getElementById(
         "appContent"
-    ).style.display = "none";
+    ).style.display =
+        "none";
+
 
     document.getElementById(
         "loginScreen"
-    ).style.display = "block";
+    ).style.display =
+        "block";
 
 }
+
+
 // ====================
 // ログイン状態を確認
 // ====================
@@ -2866,23 +2838,23 @@ async function checkLogin() {
     } = await supabaseClient.auth.getSession();
 
 
-if (data.session) {
+    if (data.session) {
 
-    document.getElementById(
-        "loginScreen"
-    ).style.display =
-        "none";
-
-
-    document.getElementById(
-        "appContent"
-    ).style.display =
-        "block";
+        document.getElementById(
+            "loginScreen"
+        ).style.display =
+            "none";
 
 
-    loadMovies();
+        document.getElementById(
+            "appContent"
+        ).style.display =
+            "block";
 
-}
+
+        loadMovies();
+
+    }
 
 }
 
@@ -2892,6 +2864,8 @@ if (data.session) {
 // ====================
 
 checkLogin();
+
+
 // ====================
 // Supabaseから映画を取得
 // ====================
@@ -2925,7 +2899,8 @@ async function loadMovies() {
     }
 
 
-    movies = data || [];
+    movies =
+        data || [];
 
 
     updateFilters();
