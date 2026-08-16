@@ -267,18 +267,69 @@
         <section class="movie-list">
 
 
-            <div class="list-header">
+<div class="list-header">
 
-                <h2>
-                    映画一覧
-                </h2>
+    <h2>
+        映画一覧
+    </h2>
+
+    <span id="movieCount">
+        0作品
+    </span>
+
+</div>
 
 
-                <span id="movieCount">
-                    0作品
-                </span>
+<div class="sort-area">
 
-            </div>
+    <label for="movieSort">
+        並び替え
+    </label>
+
+    <select
+        id="movieSort"
+        onchange="changeSort(this.value)"
+    >
+
+        <option value="newest">
+            登録順（新しい順）
+        </option>
+
+        <option value="oldest">
+            登録順（古い順）
+        </option>
+
+        <option value="country">
+            制作国順
+        </option>
+
+        <option value="date-newest">
+            鑑賞日順（新しい順）
+        </option>
+
+        <option value="date-oldest">
+            鑑賞日順（古い順）
+        </option>
+
+        <option value="director">
+            監督順
+        </option>
+
+        <option value="year-newest">
+            公開年順（新しい順）
+        </option>
+
+        <option value="year-oldest">
+            公開年順（古い順）
+        </option>
+
+        <option value="rating">
+            評価順
+        </option>
+
+    </select>
+
+</div>
 
 
             <div

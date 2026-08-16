@@ -14,9 +14,184 @@ const supabaseClient =
         SUPABASE_PUBLISHABLE_KEY
     );
 
-let movies = [];
+// ====================
+// 映画の並び替え
+// ====================
 
-let editingMovieId = null;
+let currentSort = "newest";
+
+
+function sortMovieList(movieList) {
+
+    const sorted =
+        [...movieList];
+
+
+    sorted.sort(function(a, b) {
+
+        switch (currentSort) {
+
+            // --------------------
+            // 登録順（新しい順）
+            // --------------------
+
+            case "newest":
+
+                return Number(b.id) - Number(a.id);
+
+
+            // --------------------
+            // 登録順（古い順）
+            // --------------------
+
+            case "oldest":
+
+                return Number(a.id) - Number(b.id);
+
+
+            // --------------------
+            // 制作国順
+            // --------------------
+
+            case "country":
+
+                return (a.country || "")
+                    .localeCompare(
+                        b.country || "",
+                        "ja"
+                    );
+
+
+            // --------------------
+            // 鑑賞日（新しい順）
+            // --------------------
+
+            case "date-newest":
+
+                if (!a.date && !b.date) {
+                    return 0;
+                }
+
+                if (!a.date) {
+                    return 1;
+                }
+
+                if (!b.date) {
+                    return -1;
+                }
+
+                return b.date.localeCompare(
+                    a.date
+                );
+
+
+            // --------------------
+            // 鑑賞日（古い順）
+            // --------------------
+
+            case "date-oldest":
+
+                if (!a.date && !b.date) {
+                    return 0;
+                }
+
+                if (!a.date) {
+                    return 1;
+                }
+
+                if (!b.date) {
+                    return -1;
+                }
+
+                return a.date.localeCompare(
+                    b.date
+                );
+
+
+            // --------------------
+            // 監督順
+            // --------------------
+
+            case "director":
+
+                return (a.director || "")
+                    .localeCompare(
+                        b.director || "",
+                        "ja"
+                    );
+
+
+            // --------------------
+            // 公開年（新しい順）
+            // --------------------
+
+            case "year-newest":
+
+                return (
+                    Number(b.year) ||
+                    0
+                ) - (
+                    Number(a.year) ||
+                    0
+                );
+
+
+            // --------------------
+            // 公開年（古い順）
+            // --------------------
+
+            case "year-oldest":
+
+                return (
+                    Number(a.year) ||
+                    9999
+                ) - (
+                    Number(b.year) ||
+                    9999
+                );
+
+
+            // --------------------
+            // 評価順
+            // --------------------
+
+            case "rating":
+
+                return (
+                    Number(b.rating) ||
+                    0
+                ) - (
+                    Number(a.rating) ||
+                    0
+                );
+
+
+            default:
+
+                return Number(b.id) -
+                       Number(a.id);
+
+        }
+
+    });
+
+
+    return sorted;
+
+}
+
+
+function changeSort(sortType) {
+
+    currentSort =
+        sortType;
+
+
+    displayMovies(
+        movies
+    );
+
+}
 
 
 // ====================
@@ -481,6 +656,16 @@ async function getPosterUrl(posterPath) {
 
 }
 async function displayMovies(movieList) {
+
+    const container =
+        document.getElementById(
+async function displayMovies(movieList) {
+
+    movieList =
+        sortMovieList(
+            movieList
+        );
+
 
     const container =
         document.getElementById(
