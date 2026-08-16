@@ -1,5 +1,5 @@
 /* ==================================================
-   アプリ非表示
+   非表示
 ================================================== */
 
 #appContent {
@@ -20,41 +20,32 @@
     align-items: center;
 
     padding: 20px;
-
     box-sizing: border-box;
 }
 
 #loginScreen .login-box {
     width: 100%;
     max-width: 400px;
-
     margin: 0 auto;
-
     box-sizing: border-box;
 }
 
 .login-box {
     width: 90%;
     max-width: 400px;
-
     padding: 30px;
-
     text-align: center;
 }
 
 .login-box input {
     display: block;
-
     width: 100%;
-
     box-sizing: border-box;
-
     margin: 10px 0;
 }
 
 .login-box button {
     width: 100%;
-
     margin-top: 10px;
 }
 
@@ -286,6 +277,8 @@ button:active {
     justify-content: space-between;
 
     align-items: center;
+
+    gap: 15px;
 }
 
 .list-header h2 {
@@ -296,6 +289,21 @@ button:active {
     color: #8a7968;
 
     font-size: 14px;
+}
+
+
+/* ==================================================
+   映画一覧ヘッダー
+================================================== */
+
+.movie-list-left {
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    min-width: 0;
 }
 
 
@@ -339,19 +347,6 @@ button:active {
 
 
 /* ==================================================
-   映画一覧ヘッダー
-================================================== */
-
-.movie-list-left {
-    display: flex;
-
-    align-items: center;
-
-    gap: 15px;
-}
-
-
-/* ==================================================
    並び替え
 ================================================== */
 
@@ -380,19 +375,34 @@ button:active {
 
 
 /* ==================================================
+   映画カード一覧
+================================================== */
+
+#movieContainer {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 15px;
+
+    margin-top: 20px;
+}
+
+
+/* ==================================================
    映画カード
 ================================================== */
 
 .movie-card {
     display: flex;
 
-    align-items: center;
+    align-items: flex-start;
 
-    gap: 15px;
+    gap: 20px;
+
+    width: 100%;
 
     padding: 15px;
-
-    margin-bottom: 12px;
 
     background: #fffdf8;
 
@@ -404,14 +414,19 @@ button:active {
     cursor: pointer;
 
     transition:
-        background 0.15s,
-        transform 0.1s;
+        transform 0.15s,
+        box-shadow 0.15s,
+        background 0.15s;
 }
 
 .movie-card:hover {
-    background: #f8f1e7;
+    transform: translateY(-2px);
 
-    transform: translateY(-1px);
+    box-shadow:
+        0 4px 12px
+        rgba(70, 50, 35, 0.10);
+
+    background: #fffaf2;
 }
 
 
@@ -420,53 +435,36 @@ button:active {
 ================================================== */
 
 /*
-   一覧画面では、
-   どんな画像でも必ず50×70pxに統一します。
+   ここが今回の重要部分です。
+
+   すべてのポスターを
+   幅120px × 高さ170px
+   に固定します。
 */
 
-.movie-poster {
-    width: 50px !important;
-    height: 70px !important;
+.movie-card .movie-poster {
+    width: 120px !important;
+    height: 170px !important;
 
-    min-width: 50px !important;
-    max-width: 50px !important;
+    min-width: 120px !important;
+    max-width: 120px !important;
 
-    min-height: 70px !important;
-    max-height: 70px !important;
+    min-height: 170px !important;
+    max-height: 170px !important;
 
-    object-fit: cover;
+    object-fit: contain;
 
     object-position: center;
 
-    border-radius: 3px;
-
-    background: #ded3c5;
-
-    flex-shrink: 0;
-
     display: block;
-}
 
-
-/* ==================================================
-   ポスターなし
-================================================== */
-
-.movie-poster-empty {
-    width: 50px;
-    height: 70px;
-
-    min-width: 50px;
-    max-width: 50px;
-
-    min-height: 70px;
-    max-height: 70px;
+    flex: 0 0 120px;
 
     background: #ded3c5;
 
-    border-radius: 3px;
+    border-radius: 4px;
 
-    flex-shrink: 0;
+    overflow: hidden;
 }
 
 
@@ -475,31 +473,65 @@ button:active {
 ================================================== */
 
 .movie-card-content {
-    min-width: 0;
-
     flex: 1;
+
+    min-width: 0;
 }
 
 .movie-card-content h3 {
-    margin: 0 0 5px;
+    margin-top: 0;
+
+    margin-bottom: 10px;
 
     color: #3b3028;
 
-    font-size: 18px;
+    font-size: 20px;
+
+    line-height: 1.4;
+
+    word-break: break-word;
 }
 
 .movie-info {
-    font-size: 13px;
-
     color: #766556;
+
+    font-size: 14px;
+
+    line-height: 1.8;
 }
 
 .movie-rating {
+    margin-top: 8px;
+
     color: #9a7659;
 
-    margin-top: 5px;
+    letter-spacing: 2px;
+}
 
-    letter-spacing: 1px;
+
+/* ==================================================
+   映画詳細モーダル
+================================================== */
+
+#movieModal {
+    display: none;
+
+    position: fixed;
+
+    z-index: 1000;
+
+    left: 0;
+    top: 0;
+
+    width: 100%;
+    height: 100%;
+
+    overflow-y: auto;
+
+    background:
+        rgba(40, 30, 20, 0.55);
+
+    padding: 30px 20px;
 }
 
 
@@ -507,34 +539,72 @@ button:active {
    映画詳細
 ================================================== */
 
+#movieDetail {
+    width: min(800px, 100%);
+
+    margin: 0 auto;
+
+    padding: 30px;
+
+    background: #fffdf8;
+
+    border-radius: 10px;
+
+    border:
+        1px solid #d8cbb9;
+
+    box-shadow:
+        0 5px 25px
+        rgba(50, 35, 25, 0.20);
+}
+
+
+/* ==================================================
+   詳細レイアウト
+================================================== */
+
 .detail-layout {
     display: flex;
 
-    gap: 25px;
-
     align-items: flex-start;
+
+    gap: 30px;
+
+    margin-bottom: 25px;
 }
 
-.detail-poster {
-    width: 180px;
-    height: 250px;
 
-    min-width: 180px;
-    max-width: 180px;
+/* ==================================================
+   詳細画面ポスター
+================================================== */
 
-    min-height: 250px;
-    max-height: 250px;
+.detail-layout .detail-poster {
+    width: 240px !important;
+    height: 340px !important;
 
-    object-fit: cover;
+    min-width: 240px !important;
+    max-width: 240px !important;
+
+    min-height: 340px !important;
+    max-height: 340px !important;
+
+    object-fit: contain;
 
     object-position: center;
 
-    border-radius: 5px;
+    display: block;
+
+    flex: 0 0 240px;
 
     background: #ded3c5;
 
-    display: block;
+    border-radius: 5px;
 }
+
+
+/* ==================================================
+   詳細情報
+================================================== */
 
 .detail-info {
     flex: 1;
@@ -545,8 +615,27 @@ button:active {
 .detail-info h2 {
     margin-top: 0;
 
+    margin-bottom: 20px;
+
+    color: #3b3028;
+
+    font-size: 26px;
+
+    word-break: break-word;
+}
+
+.detail-info p {
+    margin: 8px 0;
+}
+
+.detail-info strong {
     color: #3b3028;
 }
+
+
+/* ==================================================
+   感想・メモ
+================================================== */
 
 .detail-memo {
     margin-top: 25px;
@@ -557,6 +646,14 @@ button:active {
         1px solid #d8cbb9;
 
     white-space: pre-wrap;
+
+    word-break: break-word;
+}
+
+.detail-memo h3 {
+    margin-top: 0;
+
+    color: #3b3028;
 }
 
 
@@ -565,19 +662,75 @@ button:active {
 ================================================== */
 
 .edit-button {
-    margin-top: 20px;
+    margin-top: 25px;
 
     margin-right: 8px;
 }
 
 .delete-button {
-    margin-top: 20px;
+    margin-top: 25px;
 
-    background: #8a4f43;
+    background: #8b4b43;
 }
 
 .delete-button:hover {
-    background: #6f3d34;
+    background: #703b35;
+}
+
+
+/* ==================================================
+   編集モーダル
+================================================== */
+
+#editModal {
+    display: none;
+
+    position: fixed;
+
+    z-index: 1100;
+
+    left: 0;
+    top: 0;
+
+    width: 100%;
+    height: 100%;
+
+    overflow-y: auto;
+
+    background:
+        rgba(40, 30, 20, 0.55);
+
+    padding: 30px 20px;
+}
+
+#editModal > div {
+    width: min(700px, 100%);
+
+    margin: 0 auto;
+
+    padding: 30px;
+
+    background: #fffdf8;
+
+    border-radius: 10px;
+
+    border:
+        1px solid #d8cbb9;
+}
+
+
+/* ==================================================
+   グラフ
+================================================== */
+
+.chart-container {
+    position: relative;
+
+    width: 100%;
+
+    height: 300px;
+
+    margin-top: 20px;
 }
 
 
@@ -585,23 +738,14 @@ button:active {
    スマートフォン
 ================================================== */
 
-@media (max-width: 600px) {
-
-    header {
-        padding: 30px 15px;
-    }
-
-    header h1 {
-        font-size: 24px;
-
-        letter-spacing: 2px;
-    }
+@media screen and (max-width: 600px) {
 
     main {
         width: 94%;
 
-        margin: 25px auto;
+        margin: 20px auto;
     }
+
 
     section {
         padding: 20px;
@@ -609,66 +753,173 @@ button:active {
         margin-bottom: 20px;
     }
 
+
+    header {
+        padding: 30px 15px;
+    }
+
+
+    header h1 {
+        font-size: 24px;
+
+        letter-spacing: 2px;
+    }
+
+
     .filters {
         grid-template-columns: 1fr;
+    }
+
+
+    .list-header {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+
+    .movie-list-left {
+        width: 100%;
+
+        justify-content: space-between;
 
         gap: 10px;
     }
 
-    .movie-list-left {
-        gap: 8px;
-
-        flex-wrap: wrap;
-    }
 
     .movie-sort {
-        font-size: 13px;
-
-        padding: 6px 8px;
+        max-width: 150px;
     }
+
+
+    /* 映画カード */
 
     .movie-card {
         gap: 12px;
 
-        padding: 12px;
+        padding: 10px;
     }
 
-    .movie-poster {
-        width: 50px !important;
-        height: 70px !important;
 
-        min-width: 50px !important;
-        max-width: 50px !important;
+    /*
+       スマホでもポスターの比率は固定。
+       少し小さくするだけで、
+       全作品同じサイズを維持します。
+    */
 
-        min-height: 70px !important;
-        max-height: 70px !important;
+    .movie-card .movie-poster {
+        width: 90px !important;
+        height: 128px !important;
+
+        min-width: 90px !important;
+        max-width: 90px !important;
+
+        min-height: 128px !important;
+        max-height: 128px !important;
+
+        flex: 0 0 90px;
     }
 
-    .movie-poster-empty {
-        width: 50px;
-        height: 70px;
-
-        min-width: 50px;
-        max-width: 50px;
-    }
 
     .movie-card-content h3 {
-        font-size: 16px;
+        font-size: 17px;
+
+        margin-bottom: 6px;
     }
+
+
+    .movie-info {
+        font-size: 12px;
+
+        line-height: 1.6;
+    }
+
+
+    .movie-rating {
+        font-size: 12px;
+    }
+
+
+    /* 詳細 */
+
+    #movieModal,
+    #editModal {
+        padding: 15px 10px;
+    }
+
+
+    #movieDetail,
+    #editModal > div {
+        padding: 20px;
+    }
+
 
     .detail-layout {
         flex-direction: column;
+
+        align-items: center;
+
+        gap: 20px;
     }
 
-    .detail-poster {
-        width: 160px;
-        height: 220px;
 
-        min-width: 160px;
-        max-width: 160px;
+    .detail-layout .detail-poster {
+        width: 180px !important;
+        height: 255px !important;
 
-        min-height: 220px;
-        max-height: 220px;
+        min-width: 180px !important;
+        max-width: 180px !important;
+
+        min-height: 255px !important;
+        max-height: 255px !important;
+
+        flex: 0 0 180px;
+    }
+
+
+    .detail-info {
+        width: 100%;
+    }
+
+
+    .detail-info h2 {
+        font-size: 22px;
+    }
+
+}
+
+
+/* ==================================================
+   iPadなど中間サイズ
+================================================== */
+
+@media screen and (min-width: 601px) and (max-width: 900px) {
+
+    .movie-card .movie-poster {
+        width: 100px !important;
+        height: 142px !important;
+
+        min-width: 100px !important;
+        max-width: 100px !important;
+
+        min-height: 142px !important;
+        max-height: 142px !important;
+
+        flex: 0 0 100px;
+    }
+
+
+    .detail-layout .detail-poster {
+        width: 200px !important;
+        height: 283px !important;
+
+        min-width: 200px !important;
+        max-width: 200px !important;
+
+        min-height: 283px !important;
+        max-height: 283px !important;
+
+        flex: 0 0 200px;
     }
 
 }

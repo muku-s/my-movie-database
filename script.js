@@ -237,8 +237,7 @@ async function uploadPoster(file) {
         "." +
         extension;
 
-    const filePath =
-        fileName;
+    const filePath = fileName;
 
     const result =
         await supabaseClient
@@ -694,12 +693,12 @@ async function displayMovies(movieList) {
         // ポスター
         // ------------------------------------------
 
-        let posterUrl = "";
+        let detailPosterUrl = "";
 
 
         if (movie.poster) {
 
-            posterUrl =
+            detailPosterUrl =
                 await getPosterUrl(
                     movie.poster
                 );
@@ -710,22 +709,31 @@ async function displayMovies(movieList) {
         let posterHTML = "";
 
 
-        if (posterUrl) {
+        if (detailPosterUrl) {
+
+            /*
+             * ここを .movie-poster に変更
+             *
+             * CSSの .movie-poster と一致させています。
+             */
 
             posterHTML =
-                '<img ' +
-                'src="' +
-                escapeHTML(posterUrl) +
-                '" ' +
-                'class="movie-poster" ' +
+                '<img src="' +
+                escapeHTML(detailPosterUrl) +
+                '" class="movie-poster" ' +
                 'alt="' +
-                escapeHTML(movie.title || "") +
+                escapeHTML(movie.title) +
                 '">';
 
         } else {
 
+            /*
+             * ポスターがない場合も
+             * 同じサイズの枠を表示します。
+             */
+
             posterHTML =
-                '<div class="movie-poster-empty"></div>';
+                '<div class="movie-poster"></div>';
 
         }
 
@@ -872,10 +880,9 @@ async function openMovieDetail(id) {
         posterHTML =
             '<img src="' +
             escapeHTML(detailPosterUrl) +
-            '" ' +
-            'class="detail-poster" ' +
+            '" class="detail-poster" ' +
             'alt="' +
-            escapeHTML(movie.title || "") +
+            escapeHTML(movie.title) +
             '">';
 
     } else {
@@ -1187,9 +1194,7 @@ async function saveEdit() {
         getValue("editDirector");
 
     const yearElement =
-        document.getElementById(
-            "editYear"
-        );
+        document.getElementById("editYear");
 
     const year =
         yearElement
@@ -1200,9 +1205,7 @@ async function saveEdit() {
         getValue("editCountry");
 
     const dateElement =
-        document.getElementById(
-            "editDate"
-        );
+        document.getElementById("editDate");
 
     const dateValue =
         dateElement
@@ -1215,9 +1218,7 @@ async function saveEdit() {
             : dateValue;
 
     const ratingElement =
-        document.getElementById(
-            "editRating"
-        );
+        document.getElementById("editRating");
 
     const ratingValue =
         ratingElement
@@ -2551,6 +2552,7 @@ function updateStatistics() {
                     }
 
                 }
+
             );
 
     }
@@ -3003,10 +3005,54 @@ supabaseClient.auth.onAuthStateChange(
 
 
 // ==================================================
+// HTMLのonclickから呼び出せるようにする
+// ==================================================
+
+window.login =
+    login;
+
+window.logout =
+    logout;
+
+window.addMovie =
+    addMovie;
+
+window.openMovieDetail =
+    openMovieDetail;
+
+window.closeMovieModal =
+    closeMovieModal;
+
+window.openEditModal =
+    openEditModal;
+
+window.saveEdit =
+    saveEdit;
+
+window.closeEditModal =
+    closeEditModal;
+
+window.deleteMovie =
+    deleteMovie;
+
+window.searchMovies =
+    searchMovies;
+
+window.resetSearch =
+    resetSearch;
+
+window.changeSort =
+    changeSort;
+
+window.checkLogin =
+    checkLogin;
+
+
+// ==================================================
 // 映画一覧の開閉
 // ==================================================
 
-function toggleMovieList() {
+window.toggleMovieList = function () {
 
     const content =
         document.getElementById(
@@ -3058,54 +3104,7 @@ function toggleMovieList() {
 
     }
 
-}
-
-
-// ==================================================
-// HTMLのonclickから呼び出せるようにする
-// ==================================================
-
-window.login =
-    login;
-
-window.logout =
-    logout;
-
-window.addMovie =
-    addMovie;
-
-window.openMovieDetail =
-    openMovieDetail;
-
-window.closeMovieModal =
-    closeMovieModal;
-
-window.openEditModal =
-    openEditModal;
-
-window.saveEdit =
-    saveEdit;
-
-window.closeEditModal =
-    closeEditModal;
-
-window.deleteMovie =
-    deleteMovie;
-
-window.searchMovies =
-    searchMovies;
-
-window.resetSearch =
-    resetSearch;
-
-window.changeSort =
-    changeSort;
-
-window.checkLogin =
-    checkLogin;
-
-window.toggleMovieList =
-    toggleMovieList;
+};
 
 
 // ==================================================
