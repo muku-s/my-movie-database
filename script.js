@@ -1,13 +1,12 @@
-// ====================
+// ==================================================
 // Supabase接続
-// ====================
+// ==================================================
 
 const SUPABASE_URL =
     "https://ehwimuxrzytkwacnrcay.supabase.co";
 
 const SUPABASE_PUBLISHABLE_KEY =
     "sb_publishable_k8ofYICStjAsHmAGQIBNYQ_s-_jgcGR";
-
 
 const supabaseClient =
     supabase.createClient(
@@ -16,73 +15,47 @@ const supabaseClient =
     );
 
 
-// ====================
+// ==================================================
 // 映画データ
-// ====================
+// ==================================================
 
 let movies = [];
 
 let editingMovieId = null;
 
 
-// ====================
-// 映画の並び替え
-// ====================
+// ==================================================
+// 並び替え
+// ==================================================
 
 let currentSort = "newest";
 
 
 function sortMovieList(movieList) {
 
-    const sorted =
-        [...movieList];
+    const sorted = [...movieList];
 
-
-    sorted.sort(function(a, b) {
+    sorted.sort(function (a, b) {
 
         switch (currentSort) {
 
-            // --------------------
-            // 登録順（新しい順）
-            // --------------------
-
             case "newest":
 
-                return (
-                    Number(b.id) -
-                    Number(a.id)
-                );
+                return Number(b.id) - Number(a.id);
 
-
-            // --------------------
-            // 登録順（古い順）
-            // --------------------
 
             case "oldest":
 
-                return (
-                    Number(a.id) -
-                    Number(b.id)
-                );
+                return Number(a.id) - Number(b.id);
 
-
-            // --------------------
-            // 制作国順
-            // --------------------
 
             case "country":
 
-                return (
-                    a.country || ""
-                ).localeCompare(
-                    b.country || "",
+                return String(a.country || "").localeCompare(
+                    String(b.country || ""),
                     "ja"
                 );
 
-
-            // --------------------
-            // 鑑賞日（新しい順）
-            // --------------------
 
             case "date-newest":
 
@@ -98,14 +71,10 @@ function sortMovieList(movieList) {
                     return -1;
                 }
 
-                return b.date.localeCompare(
-                    a.date
+                return String(b.date).localeCompare(
+                    String(a.date)
                 );
 
-
-            // --------------------
-            // 鑑賞日（古い順）
-            // --------------------
 
             case "date-oldest":
 
@@ -121,101 +90,66 @@ function sortMovieList(movieList) {
                     return -1;
                 }
 
-                return a.date.localeCompare(
-                    b.date
+                return String(a.date).localeCompare(
+                    String(b.date)
                 );
 
 
-            // --------------------
-            // 監督順
-            // --------------------
-
             case "director":
 
-                return (
-                    a.director || ""
-                ).localeCompare(
-                    b.director || "",
+                return String(a.director || "").localeCompare(
+                    String(b.director || ""),
                     "ja"
                 );
 
 
-            // --------------------
-            // 公開年（新しい順）
-            // --------------------
-
             case "year-newest":
 
                 return (
-                    Number(b.year) || 0
-                ) - (
-                    Number(a.year) || 0
+                    (Number(b.year) || 0) -
+                    (Number(a.year) || 0)
                 );
 
-
-            // --------------------
-            // 公開年（古い順）
-            // --------------------
 
             case "year-oldest":
 
                 return (
-                    Number(a.year) || 9999
-                ) - (
-                    Number(b.year) || 9999
+                    (Number(a.year) || 9999) -
+                    (Number(b.year) || 9999)
                 );
 
-
-            // --------------------
-            // 評価順
-            // --------------------
 
             case "rating":
 
                 return (
-                    Number(b.rating) || 0
-                ) - (
-                    Number(a.rating) || 0
+                    (Number(b.rating) || 0) -
+                    (Number(a.rating) || 0)
                 );
 
-
-            // --------------------
-            // デフォルト
-            // --------------------
 
             default:
 
-                return (
-                    Number(b.id) -
-                    Number(a.id)
-                );
+                return Number(b.id) - Number(a.id);
 
         }
 
     });
 
-
     return sorted;
-
 }
 
 
 function changeSort(sortType) {
 
-    currentSort =
-        sortType;
+    currentSort = sortType;
 
-
-    displayMovies(
-        movies
-    );
-
+    displayMovies(movies);
 }
 
 
-// ====================
+// ==================================================
 // グラフ
-// ====================
+// ==================================================
 
 let directorChart = null;
 
@@ -224,9 +158,9 @@ let countryChart = null;
 let decadeChart = null;
 
 
-// ====================
-// データ保存
-// ====================
+// ==================================================
+// LocalStorage
+// ==================================================
 
 function saveMovies() {
 
@@ -238,61 +172,46 @@ function saveMovies() {
 }
 
 
-// ====================
+// ==================================================
 // 画像をData URLに変換
-// ====================
+// ==================================================
 
 function imageToDataURL(file) {
 
-    return new Promise(
-        function(resolve, reject) {
+    return new Promise(function (resolve, reject) {
 
-            if (!file) {
+        if (!file) {
 
-                resolve("");
+            resolve("");
 
-                return;
-
-            }
-
-
-            const reader =
-                new FileReader();
-
-
-            reader.onload =
-                function() {
-
-                    resolve(
-                        reader.result
-                    );
-
-                };
-
-
-            reader.onerror =
-                function() {
-
-                    reject(
-                        reader.error
-                    );
-
-                };
-
-
-            reader.readAsDataURL(
-                file
-            );
+            return;
 
         }
-    );
+
+        const reader = new FileReader();
+
+        reader.onload = function () {
+
+            resolve(reader.result);
+
+        };
+
+        reader.onerror = function () {
+
+            reject(reader.error);
+
+        };
+
+        reader.readAsDataURL(file);
+
+    });
 
 }
 
 
-// ====================
+// ==================================================
 // ポスターをSupabase Storageへアップロード
-// ====================
+// ==================================================
 
 async function uploadPoster(file) {
 
@@ -302,12 +221,11 @@ async function uploadPoster(file) {
 
     }
 
-
     const extension =
         file.name
             .split(".")
-            .pop();
-
+            .pop()
+            .toLowerCase();
 
     const fileName =
         Date.now() +
@@ -318,14 +236,9 @@ async function uploadPoster(file) {
         "." +
         extension;
 
+    const filePath = fileName;
 
-    const filePath =
-        fileName;
-
-
-    const {
-        error
-    } =
+    const result =
         await supabaseClient
             .storage
             .from("movie-posters")
@@ -334,118 +247,137 @@ async function uploadPoster(file) {
                 file
             );
 
-
-    if (error) {
+    if (result.error) {
 
         console.error(
             "ポスターアップロードエラー:",
-            error
+            result.error
         );
 
-        throw error;
+        throw result.error;
 
     }
-
 
     return filePath;
 
 }
 
 
-// ====================
+// ==================================================
 // 映画登録
-// ====================
+// ==================================================
 
 async function addMovie() {
 
-    const title =
-        document
-            .getElementById("movieTitle")
-            .value
-            .trim();
+    const titleElement =
+        document.getElementById("movieTitle");
 
+    const directorElement =
+        document.getElementById("movieDirector");
+
+    const yearElement =
+        document.getElementById("movieYear");
+
+    const countryElement =
+        document.getElementById("movieCountry");
+
+    const dateElement =
+        document.getElementById("movieDate");
+
+    const ratingElement =
+        document.getElementById("movieRating");
+
+    const genreElement =
+        document.getElementById("movieGenre");
+
+    const castElement =
+        document.getElementById("movieCast");
+
+    const tagsElement =
+        document.getElementById("movieTags");
+
+    const memoElement =
+        document.getElementById("movieMemo");
+
+    const posterElement =
+        document.getElementById("moviePoster");
+
+
+    if (!titleElement) {
+
+        console.error(
+            "movieTitleが見つかりません。"
+        );
+
+        return;
+
+    }
+
+
+    const title =
+        titleElement.value.trim();
 
     const director =
-        document
-            .getElementById("movieDirector")
-            .value
-            .trim();
-
+        directorElement
+            ? directorElement.value.trim()
+            : "";
 
     const year =
-        document
-            .getElementById("movieYear")
-            .value;
-
+        yearElement
+            ? yearElement.value
+            : "";
 
     const country =
-        document
-            .getElementById("movieCountry")
-            .value
-            .trim();
-
+        countryElement
+            ? countryElement.value.trim()
+            : "";
 
     const dateValue =
-        document
-            .getElementById("movieDate")
-            .value;
-
+        dateElement
+            ? dateElement.value
+            : "";
 
     const date =
         dateValue === ""
             ? null
             : dateValue;
 
-
     const ratingValue =
-        document
-            .getElementById("movieRating")
-            .value;
-
+        ratingElement
+            ? ratingElement.value
+            : "";
 
     const rating =
         ratingValue === ""
             ? null
             : Number(ratingValue);
 
-
     const genre =
-        document
-            .getElementById("movieGenre")
-            .value
-            .trim();
-
+        genreElement
+            ? genreElement.value.trim()
+            : "";
 
     const cast =
-        document
-            .getElementById("movieCast")
-            .value
-            .trim();
-
+        castElement
+            ? castElement.value.trim()
+            : "";
 
     const tags =
-        document
-            .getElementById("movieTags")
-            .value
-            .trim();
-
+        tagsElement
+            ? tagsElement.value.trim()
+            : "";
 
     const memo =
-        document
-            .getElementById("movieMemo")
-            .value
-            .trim();
-
+        memoElement
+            ? memoElement.value.trim()
+            : "";
 
     const posterFile =
-        document
-            .getElementById("moviePoster")
-            .files[0];
+        posterElement &&
+        posterElement.files
+            ? posterElement.files[0]
+            : null;
 
-
-    // --------------------
-    // 作品名チェック
-    // --------------------
 
     if (!title) {
 
@@ -458,38 +390,41 @@ async function addMovie() {
     }
 
 
-    // --------------------
-    // ポスター画像
-    // --------------------
+    // ------------------------------------------
+    // ポスターアップロード
+    // ------------------------------------------
 
     let poster = "";
 
-    try {
+    if (posterFile) {
 
-        poster =
-            await uploadPoster(
-                posterFile
+        try {
+
+            poster =
+                await uploadPoster(
+                    posterFile
+                );
+
+        } catch (error) {
+
+            console.error(error);
+
+            alert(
+                "ポスター画像をアップロードできませんでした。"
             );
 
-    } catch (error) {
+            return;
 
-        alert(
-            "ポスター画像をアップロードできませんでした。"
-        );
-
-        return;
+        }
 
     }
 
 
-    // --------------------
+    // ------------------------------------------
     // Supabaseへ登録
-    // --------------------
+    // ------------------------------------------
 
-    const {
-        data,
-        error
-    } =
+    const result =
         await supabaseClient
             .from("movies")
             .insert({
@@ -521,20 +456,16 @@ async function addMovie() {
             .single();
 
 
-    // --------------------
-    // エラー処理
-    // --------------------
-
-    if (error) {
+    if (result.error) {
 
         console.error(
             "映画登録エラー:",
-            error
+            result.error
         );
 
         alert(
             "映画を登録できませんでした。\n\n" +
-            error.message
+            result.error.message
         );
 
         return;
@@ -542,11 +473,9 @@ async function addMovie() {
     }
 
 
-    // --------------------
-    // 画面を更新
-    // --------------------
-
-    movies.unshift(data);
+    movies.unshift(
+        result.data
+    );
 
 
     clearForm();
@@ -565,72 +494,50 @@ async function addMovie() {
 }
 
 
-// ====================
-// フォームをクリア
-// ====================
+// ==================================================
+// フォームクリア
+// ==================================================
 
 function clearForm() {
 
-    document
-        .getElementById("movieTitle")
-        .value = "";
+    const ids = [
+
+        "movieTitle",
+        "movieDirector",
+        "movieYear",
+        "movieCountry",
+        "movieDate",
+        "movieRating",
+        "movieGenre",
+        "movieCast",
+        "movieTags",
+        "moviePoster",
+        "movieMemo"
+
+    ];
 
 
-    document
-        .getElementById("movieDirector")
-        .value = "";
+    ids.forEach(function (id) {
 
+        const element =
+            document.getElementById(id);
 
-    document
-        .getElementById("movieYear")
-        .value = "";
+        if (!element) {
 
+            return;
 
-    document
-        .getElementById("movieCountry")
-        .value = "";
+        }
 
+        element.value = "";
 
-    document
-        .getElementById("movieDate")
-        .value = "";
-
-
-    document
-        .getElementById("movieRating")
-        .value = "";
-
-
-    document
-        .getElementById("movieGenre")
-        .value = "";
-
-
-    document
-        .getElementById("movieCast")
-        .value = "";
-
-
-    document
-        .getElementById("movieTags")
-        .value = "";
-
-
-    document
-        .getElementById("moviePoster")
-        .value = "";
-
-
-    document
-        .getElementById("movieMemo")
-        .value = "";
+    });
 
 }
 
 
-// ====================
+// ==================================================
 // ポスターURL取得
-// ====================
+// ==================================================
 
 async function getPosterUrl(posterPath) {
 
@@ -647,46 +554,29 @@ async function getPosterUrl(posterPath) {
 
     try {
 
-        // --------------------
-        // 古い公開URLにも対応
-        // --------------------
-
         if (
-            posterPath.startsWith(
-                "http://"
-            ) ||
-            posterPath.startsWith(
-                "https://"
-            )
+            posterPath.startsWith("http://") ||
+            posterPath.startsWith("https://")
         ) {
 
             const posterUrl =
-                new URL(
-                    posterPath
-                );
-
+                new URL(posterPath);
 
             const pathPrefix =
                 "/storage/v1/object/public/movie-posters/";
 
-
             const pathname =
                 posterUrl.pathname;
 
-
             const index =
-                pathname.indexOf(
-                    pathPrefix
-                );
-
+                pathname.indexOf(pathPrefix);
 
             if (index !== -1) {
 
                 filePath =
                     decodeURIComponent(
                         pathname.substring(
-                            index +
-                            pathPrefix.length
+                            index + pathPrefix.length
                         )
                     );
 
@@ -697,7 +587,7 @@ async function getPosterUrl(posterPath) {
     } catch (error) {
 
         console.error(
-            "ポスターURLの処理エラー:",
+            "ポスターURL処理エラー:",
             error
         );
 
@@ -706,10 +596,7 @@ async function getPosterUrl(posterPath) {
     }
 
 
-    const {
-        data,
-        error
-    } =
+    const result =
         await supabaseClient
             .storage
             .from("movie-posters")
@@ -719,11 +606,11 @@ async function getPosterUrl(posterPath) {
             );
 
 
-    if (error) {
+    if (result.error) {
 
         console.error(
             "ポスターURL取得エラー:",
-            error
+            result.error
         );
 
         return "";
@@ -731,21 +618,21 @@ async function getPosterUrl(posterPath) {
     }
 
 
-    return data.signedUrl;
+    return result.data
+        ? result.data.signedUrl
+        : "";
 
 }
 
 
-// ====================
+// ==================================================
 // 映画一覧表示
-// ====================
+// ==================================================
 
 async function displayMovies(movieList) {
 
-    movieList =
-        sortMovieList(
-            movieList
-        );
+    const sortedMovies =
+        sortMovieList(movieList);
 
 
     const container =
@@ -773,13 +660,13 @@ async function displayMovies(movieList) {
     if (movieCount) {
 
         movieCount.textContent =
-            movieList.length +
+            sortedMovies.length +
             "作品";
 
     }
 
 
-    if (movieList.length === 0) {
+    if (sortedMovies.length === 0) {
 
         container.innerHTML =
             "<p>該当する映画がありません。</p>";
@@ -789,7 +676,7 @@ async function displayMovies(movieList) {
     }
 
 
-    for (const movie of movieList) {
+    for (const movie of sortedMovies) {
 
         const card =
             document.createElement(
@@ -801,9 +688,9 @@ async function displayMovies(movieList) {
             "movie-card";
 
 
-        // --------------------
-        // ポスターURL
-        // --------------------
+        // ------------------------------------------
+        // ポスター
+        // ------------------------------------------
 
         let detailPosterUrl = "";
 
@@ -818,101 +705,91 @@ async function displayMovies(movieList) {
         }
 
 
-        const posterHTML =
-            detailPosterUrl
-
-                ? `
-                    <img
-                        src="${detailPosterUrl}"
-                        class="detail-poster"
-                    >
-                  `
-
-                : `
-                    <div
-                        class="detail-poster"
-                    ></div>
-                  `;
+        let posterHTML = "";
 
 
-        // --------------------
+        if (detailPosterUrl) {
+
+            posterHTML =
+                '<img src="' +
+                escapeHTML(detailPosterUrl) +
+                '" class="detail-poster">';
+
+        } else {
+
+            posterHTML =
+                '<div class="detail-poster"></div>';
+
+        }
+
+
+        // ------------------------------------------
         // 評価
-        // --------------------
+        // ------------------------------------------
 
-        const stars =
-            movie.rating
+        let stars = "";
 
-                ? "★".repeat(
+
+        if (movie.rating) {
+
+            stars =
+                "★".repeat(
                     Number(movie.rating)
-                  )
+                );
 
-                : "";
+        }
 
 
-        // --------------------
+        // ------------------------------------------
         // カード
-        // --------------------
+        // ------------------------------------------
 
-        card.innerHTML = `
+        card.innerHTML =
 
-            ${posterHTML}
+            posterHTML +
 
-            <div
-                class="movie-card-content"
-            >
+            '<div class="movie-card-content">' +
 
-                <h3>
-                    ${escapeHTML(
-                        movie.title
-                    )}
-                </h3>
+                "<h3>" +
+                    escapeHTML(movie.title) +
+                "</h3>" +
 
+                '<div class="movie-info">' +
 
-                <div
-                    class="movie-info"
-                >
-
-                    監督：
-                    ${escapeHTML(
+                    "監督：" +
+                    escapeHTML(
                         movie.director ||
                         "未登録"
-                    )}
+                    ) +
 
-                    <br>
+                    "<br>" +
 
-                    公開年：
-                    ${escapeHTML(
+                    "公開年：" +
+                    escapeHTML(
                         movie.year ||
                         "未登録"
-                    )}
+                    ) +
 
-                    <br>
+                    "<br>" +
 
-                    制作国：
-                    ${escapeHTML(
+                    "制作国：" +
+                    escapeHTML(
                         movie.country ||
                         "未登録"
-                    )}
+                    ) +
 
-                </div>
+                "</div>" +
 
+                '<div class="movie-rating">' +
+                    stars +
+                "</div>" +
 
-                <div
-                    class="movie-rating"
-                >
-
-                    ${stars}
-
-                </div>
-
-            </div>
-
-        `;
+            "</div>";
 
 
         card.addEventListener(
             "click",
-            function() {
+            function () {
 
                 openMovieDetail(
                     movie.id
@@ -931,17 +808,17 @@ async function displayMovies(movieList) {
 }
 
 
-// ====================
-// 詳細画面
-// ====================
+// ==================================================
+// 映画詳細
+// ==================================================
 
 async function openMovieDetail(id) {
 
     const movie =
         movies.find(
-            function(movie) {
+            function (item) {
 
-                return movie.id === id;
+                return String(item.id) === String(id);
 
             }
         );
@@ -980,234 +857,189 @@ async function openMovieDetail(id) {
     }
 
 
-    const posterHTML =
-        detailPosterUrl
-
-            ? `
-                <img
-                    src="${detailPosterUrl}"
-                    class="detail-poster"
-                >
-              `
-
-            : `
-                <div
-                    class="detail-poster"
-                ></div>
-              `;
+    let posterHTML = "";
 
 
-    const stars =
-        movie.rating
+    if (detailPosterUrl) {
 
-            ? "★".repeat(
+        posterHTML =
+            '<img src="' +
+            escapeHTML(detailPosterUrl) +
+            '" class="detail-poster">';
+
+    } else {
+
+        posterHTML =
+            '<div class="detail-poster"></div>';
+
+    }
+
+
+    let stars = "評価なし";
+
+
+    if (movie.rating) {
+
+        stars =
+            "★".repeat(
                 Number(movie.rating)
-              )
+            );
 
-            : "評価なし";
-
-
-    detail.innerHTML = `
-
-        <div
-            class="detail-layout"
-        >
-
-            ${posterHTML}
+    }
 
 
-            <div
-                class="detail-info"
-            >
+    detail.innerHTML =
 
-                <h2>
-                    ${escapeHTML(
-                        movie.title
-                    )}
-                </h2>
+        '<div class="detail-layout">' +
 
+            posterHTML +
 
-                <p>
+            '<div class="detail-info">' +
 
-                    <strong>
-                        監督：
-                    </strong>
+                "<h2>" +
+                    escapeHTML(movie.title) +
+                "</h2>" +
 
-                    ${escapeHTML(
+                "<p>" +
+                    "<strong>監督：</strong>" +
+                    escapeHTML(
                         movie.director ||
                         "未登録"
-                    )}
+                    ) +
+                "</p>" +
 
-                </p>
-
-
-                <p>
-
-                    <strong>
-                        公開年：
-                    </strong>
-
-                    ${escapeHTML(
+                "<p>" +
+                    "<strong>公開年：</strong>" +
+                    escapeHTML(
                         movie.year ||
                         "未登録"
-                    )}
+                    ) +
+                "</p>" +
 
-                </p>
-
-
-                <p>
-
-                    <strong>
-                        制作国：
-                    </strong>
-
-                    ${escapeHTML(
+                "<p>" +
+                    "<strong>制作国：</strong>" +
+                    escapeHTML(
                         movie.country ||
                         "未登録"
-                    )}
+                    ) +
+                "</p>" +
 
-                </p>
-
-
-                <p>
-
-                    <strong>
-                        ジャンル：
-                    </strong>
-
-                    ${escapeHTML(
+                "<p>" +
+                    "<strong>ジャンル：</strong>" +
+                    escapeHTML(
                         movie.genre ||
                         "未登録"
-                    )}
+                    ) +
+                "</p>" +
 
-                </p>
-
-
-                <p>
-
-                    <strong>
-                        出演者：
-                    </strong>
-
-                    ${escapeHTML(
+                "<p>" +
+                    "<strong>出演者：</strong>" +
+                    escapeHTML(
                         movie.cast ||
                         "未登録"
-                    )}
+                    ) +
+                "</p>" +
 
-                </p>
-
-
-                <p>
-
-                    <strong>
-                        タグ：
-                    </strong>
-
-                    ${escapeHTML(
+                "<p>" +
+                    "<strong>タグ：</strong>" +
+                    escapeHTML(
                         movie.tags ||
                         "なし"
-                    )}
+                    ) +
+                "</p>" +
 
-                </p>
-
-
-                <p>
-
-                    <strong>
-                        鑑賞日：
-                    </strong>
-
-                    ${escapeHTML(
+                "<p>" +
+                    "<strong>鑑賞日：</strong>" +
+                    escapeHTML(
                         movie.date ||
                         "未登録"
-                    )}
+                    ) +
+                "</p>" +
 
-                </p>
+                "<p>" +
+                    "<strong>評価：</strong>" +
+                    stars +
+                "</p>" +
 
+            "</div>" +
 
-                <p>
+        "</div>" +
 
-                    <strong>
-                        評価：
-                    </strong>
+        '<div class="detail-memo">' +
 
-                    ${stars}
+            "<h3>感想・メモ</h3>" +
 
-                </p>
-
-            </div>
-
-        </div>
-
-
-        <div
-            class="detail-memo"
-        >
-
-            <h3>
-                感想・メモ
-            </h3>
-
-
-            ${escapeHTML(
+            escapeHTML(
                 movie.memo ||
                 "メモはありません。"
-            )}
+            ) +
 
-        </div>
+        "</div>" +
 
+        '<button class="edit-button" ' +
+            'onclick="openEditModal(' +
+            "'" + String(movie.id) + "'" +
+            ')">' +
+            "編集" +
+        "</button>" +
 
-        <button
-            class="edit-button"
-            onclick="openEditModal(${movie.id})"
-        >
-            編集
-        </button>
-
-
-        <button
-            class="delete-button"
-            onclick="deleteMovie(${movie.id})"
-        >
-            削除
-        </button>
-
-    `;
+        '<button class="delete-button" ' +
+            'onclick="deleteMovie(' +
+            "'" + String(movie.id) + "'" +
+            ')">' +
+            "削除" +
+        "</button>";
 
 
-    document.getElementById(
-        "movieModal"
-    ).style.display =
-        "block";
+    const modal =
+        document.getElementById(
+            "movieModal"
+        );
+
+
+    if (modal) {
+
+        modal.style.display =
+            "block";
+
+    }
 
 }
 
 
-// ====================
+// ==================================================
 // 詳細画面を閉じる
-// ====================
+// ==================================================
 
 function closeMovieModal() {
 
-    document.getElementById(
-        "movieModal"
-    ).style.display =
-        "none";
+    const modal =
+        document.getElementById(
+            "movieModal"
+        );
+
+
+    if (modal) {
+
+        modal.style.display =
+            "none";
+
+    }
 
 }
 
 
-// ====================
+// ==================================================
 // 編集画面
-// ====================
+// ==================================================
 
 function openEditModal(id) {
 
     const movie =
         movies.find(
-            function(movie) {
+            function (item) {
 
-                return movie.id === id;
+                return String(item.id) === String(id);
 
             }
         );
@@ -1221,94 +1053,112 @@ function openEditModal(id) {
 
 
     editingMovieId =
-        id;
+        movie.id;
 
 
-    document.getElementById(
-        "editTitle"
-    ).value =
-        movie.title;
+    const fields = {
+
+        editTitle:
+            movie.title || "",
+
+        editDirector:
+            movie.director || "",
+
+        editYear:
+            movie.year || "",
+
+        editCountry:
+            movie.country || "",
+
+        editDate:
+            movie.date || "",
+
+        editRating:
+            movie.rating || "",
+
+        editGenre:
+            movie.genre || "",
+
+        editCast:
+            movie.cast || "",
+
+        editTags:
+            movie.tags || "",
+
+        editMemo:
+            movie.memo || "",
+
+        editPoster:
+            ""
+
+    };
 
 
-    document.getElementById(
-        "editDirector"
-    ).value =
-        movie.director || "";
+    Object.keys(fields).forEach(
+        function (id) {
+
+            const element =
+                document.getElementById(id);
+
+            if (element) {
+
+                element.value =
+                    fields[id];
+
+            }
+
+        }
+    );
 
 
-    document.getElementById(
-        "editYear"
-    ).value =
-        movie.year || "";
+    const modal =
+        document.getElementById(
+            "editModal"
+        );
 
 
-    document.getElementById(
-        "editCountry"
-    ).value =
-        movie.country || "";
+    if (modal) {
 
+        modal.style.display =
+            "block";
 
-    document.getElementById(
-        "editDate"
-    ).value =
-        movie.date || "";
-
-
-    document.getElementById(
-        "editRating"
-    ).value =
-        movie.rating || "";
-
-
-    document.getElementById(
-        "editGenre"
-    ).value =
-        movie.genre || "";
-
-
-    document.getElementById(
-        "editCast"
-    ).value =
-        movie.cast || "";
-
-
-    document.getElementById(
-        "editTags"
-    ).value =
-        movie.tags || "";
-
-
-    document.getElementById(
-        "editMemo"
-    ).value =
-        movie.memo || "";
-
-
-    document.getElementById(
-        "editPoster"
-    ).value =
-        "";
-
-
-    document.getElementById(
-        "editModal"
-    ).style.display =
-        "block";
+    }
 
 }
 
 
-// ====================
+// ==================================================
 // 編集保存
-// ====================
+// ==================================================
 
 async function saveEdit() {
 
+    if (editingMovieId === null) {
+
+        return;
+
+    }
+
+
+    const getValue =
+        function (id) {
+
+            const element =
+                document.getElementById(id);
+
+            if (!element) {
+
+                return "";
+
+            }
+
+            return element.value.trim();
+
+        };
+
+
     const title =
-        document
-            .getElementById("editTitle")
-            .value
-            .trim();
+        getValue("editTitle");
 
 
     if (!title) {
@@ -1323,89 +1173,77 @@ async function saveEdit() {
 
 
     const director =
-        document
-            .getElementById("editDirector")
-            .value
-            .trim();
+        getValue("editDirector");
 
+    const yearElement =
+        document.getElementById("editYear");
 
     const year =
-        document
-            .getElementById("editYear")
-            .value;
-
+        yearElement
+            ? yearElement.value
+            : "";
 
     const country =
-        document
-            .getElementById("editCountry")
-            .value
-            .trim();
+        getValue("editCountry");
 
+    const dateElement =
+        document.getElementById("editDate");
 
     const dateValue =
-        document
-            .getElementById("editDate")
-            .value;
-
+        dateElement
+            ? dateElement.value
+            : "";
 
     const date =
         dateValue === ""
             ? null
             : dateValue;
 
+    const ratingElement =
+        document.getElementById("editRating");
 
     const ratingValue =
-        document
-            .getElementById("editRating")
-            .value;
-
+        ratingElement
+            ? ratingElement.value
+            : "";
 
     const rating =
         ratingValue === ""
             ? null
             : Number(ratingValue);
 
-
     const genre =
-        document
-            .getElementById("editGenre")
-            .value
-            .trim();
-
+        getValue("editGenre");
 
     const cast =
-        document
-            .getElementById("editCast")
-            .value
-            .trim();
-
+        getValue("editCast");
 
     const tags =
-        document
-            .getElementById("editTags")
-            .value
-            .trim();
-
+        getValue("editTags");
 
     const memo =
-        document
-            .getElementById("editMemo")
-            .value
-            .trim();
+        getValue("editMemo");
 
 
-    // --------------------
-    // ポスター
-    // --------------------
+    const posterElement =
+        document.getElementById(
+            "editPoster"
+        );
+
 
     const posterFile =
-        document
-            .getElementById("editPoster")
-            .files[0];
+        posterElement &&
+        posterElement.files
+            ? posterElement.files[0]
+            : null;
 
 
     let poster = null;
 
+
+    // ------------------------------------------
+    // 新しいポスター
+    // ------------------------------------------
 
     if (posterFile) {
 
@@ -1418,6 +1256,8 @@ async function saveEdit() {
 
         } catch (error) {
 
+            console.error(error);
+
             alert(
                 "ポスター画像をアップロードできませんでした。"
             );
@@ -1428,10 +1268,6 @@ async function saveEdit() {
 
     }
 
-
-    // --------------------
-    // 更新データ
-    // --------------------
 
     const updateData = {
 
@@ -1458,20 +1294,18 @@ async function saveEdit() {
     };
 
 
-    // --------------------
-    // ポスター変更時
-    // --------------------
+    // ------------------------------------------
+    // ポスターを変更した場合
+    // ------------------------------------------
 
     if (posterFile) {
 
         const oldMovie =
             movies.find(
-                function(movie) {
+                function (movie) {
 
-                    return (
-                        movie.id ===
-                        editingMovieId
-                    );
+                    return String(movie.id) ===
+                        String(editingMovieId);
 
                 }
             );
@@ -1489,12 +1323,8 @@ async function saveEdit() {
 
 
                 if (
-                    oldMovie.poster.startsWith(
-                        "http://"
-                    ) ||
-                    oldMovie.poster.startsWith(
-                        "https://"
-                    )
+                    oldMovie.poster.startsWith("http://") ||
+                    oldMovie.poster.startsWith("https://")
                 ) {
 
                     const oldPosterUrl =
@@ -1502,28 +1332,23 @@ async function saveEdit() {
                             oldMovie.poster
                         );
 
-
                     const pathPrefix =
                         "/storage/v1/object/public/movie-posters/";
 
-
                     const pathname =
                         oldPosterUrl.pathname;
-
 
                     const index =
                         pathname.indexOf(
                             pathPrefix
                         );
 
-
                     if (index !== -1) {
 
                         oldFilePath =
                             decodeURIComponent(
                                 pathname.substring(
-                                    index +
-                                    pathPrefix.length
+                                    index + pathPrefix.length
                                 )
                             );
 
@@ -1532,10 +1357,7 @@ async function saveEdit() {
                 }
 
 
-                const {
-                    error:
-                        oldPosterDeleteError
-                } =
+                const deleteResult =
                     await supabaseClient
                         .storage
                         .from("movie-posters")
@@ -1544,13 +1366,11 @@ async function saveEdit() {
                         ]);
 
 
-                if (
-                    oldPosterDeleteError
-                ) {
+                if (deleteResult.error) {
 
                     console.error(
                         "古いポスター削除エラー:",
-                        oldPosterDeleteError
+                        deleteResult.error
                     );
 
                 }
@@ -1573,14 +1393,11 @@ async function saveEdit() {
     }
 
 
-    // --------------------
-    // Supabaseへ保存
-    // --------------------
+    // ------------------------------------------
+    // Supabase更新
+    // ------------------------------------------
 
-    const {
-        data,
-        error
-    } =
+    const result =
         await supabaseClient
             .from("movies")
             .update(updateData)
@@ -1592,20 +1409,16 @@ async function saveEdit() {
             .single();
 
 
-    // --------------------
-    // エラー処理
-    // --------------------
-
-    if (error) {
+    if (result.error) {
 
         console.error(
             "映画編集エラー:",
-            error
+            result.error
         );
 
         alert(
             "変更を保存できませんでした。\n\n" +
-            error.message
+            result.error.message
         );
 
         return;
@@ -1613,18 +1426,12 @@ async function saveEdit() {
     }
 
 
-    // --------------------
-    // ローカル更新
-    // --------------------
-
     const index =
         movies.findIndex(
-            function(movie) {
+            function (movie) {
 
-                return (
-                    movie.id ===
-                    editingMovieId
-                );
+                return String(movie.id) ===
+                    String(editingMovieId);
 
             }
         );
@@ -1633,7 +1440,7 @@ async function saveEdit() {
     if (index !== -1) {
 
         movies[index] =
-            data;
+            result.data;
 
     }
 
@@ -1656,23 +1463,31 @@ async function saveEdit() {
 }
 
 
-// ====================
+// ==================================================
 // 編集画面を閉じる
-// ====================
+// ==================================================
 
 function closeEditModal() {
 
-    document.getElementById(
-        "editModal"
-    ).style.display =
-        "none";
+    const modal =
+        document.getElementById(
+            "editModal"
+        );
+
+
+    if (modal) {
+
+        modal.style.display =
+            "none";
+
+    }
 
 }
 
 
-// ====================
+// ==================================================
 // 映画削除
-// ====================
+// ==================================================
 
 async function deleteMovie(id) {
 
@@ -1689,9 +1504,9 @@ async function deleteMovie(id) {
 
     const movie =
         movies.find(
-            function(movie) {
+            function (item) {
 
-                return movie.id === id;
+                return String(item.id) === String(id);
 
             }
         );
@@ -1704,9 +1519,9 @@ async function deleteMovie(id) {
     }
 
 
-    // --------------------
+    // ------------------------------------------
     // ポスター削除
-    // --------------------
+    // ------------------------------------------
 
     if (movie.poster) {
 
@@ -1717,12 +1532,8 @@ async function deleteMovie(id) {
 
 
             if (
-                movie.poster.startsWith(
-                    "http://"
-                ) ||
-                movie.poster.startsWith(
-                    "https://"
-                )
+                movie.poster.startsWith("http://") ||
+                movie.poster.startsWith("https://")
             ) {
 
                 const posterUrl =
@@ -1730,28 +1541,23 @@ async function deleteMovie(id) {
                         movie.poster
                     );
 
-
                 const pathPrefix =
                     "/storage/v1/object/public/movie-posters/";
 
-
                 const pathname =
                     posterUrl.pathname;
-
 
                 const index =
                     pathname.indexOf(
                         pathPrefix
                     );
 
-
                 if (index !== -1) {
 
                     filePath =
                         decodeURIComponent(
                             pathname.substring(
-                                index +
-                                pathPrefix.length
+                                index + pathPrefix.length
                             )
                         );
 
@@ -1760,10 +1566,7 @@ async function deleteMovie(id) {
             }
 
 
-            const {
-                error:
-                    storageError
-            } =
+            const storageResult =
                 await supabaseClient
                     .storage
                     .from("movie-posters")
@@ -1772,11 +1575,11 @@ async function deleteMovie(id) {
                     ]);
 
 
-            if (storageError) {
+            if (storageResult.error) {
 
                 console.error(
                     "ポスター削除エラー:",
-                    storageError
+                    storageResult.error
                 );
 
             }
@@ -1793,13 +1596,11 @@ async function deleteMovie(id) {
     }
 
 
-    // --------------------
+    // ------------------------------------------
     // moviesテーブルから削除
-    // --------------------
+    // ------------------------------------------
 
-    const {
-        error
-    } =
+    const result =
         await supabaseClient
             .from("movies")
             .delete()
@@ -1809,16 +1610,16 @@ async function deleteMovie(id) {
             );
 
 
-    if (error) {
+    if (result.error) {
 
         console.error(
             "映画削除エラー:",
-            error
+            result.error
         );
 
         alert(
             "映画を削除できませんでした。\n\n" +
-            error.message
+            result.error.message
         );
 
         return;
@@ -1826,15 +1627,11 @@ async function deleteMovie(id) {
     }
 
 
-    // --------------------
-    // ローカル表示更新
-    // --------------------
-
     movies =
         movies.filter(
-            function(movie) {
+            function (movie) {
 
-                return movie.id !== id;
+                return String(movie.id) !== String(id);
 
             }
         );
@@ -1856,73 +1653,93 @@ async function deleteMovie(id) {
 }
 
 
-// ====================
+// ==================================================
 // 映画検索
-// ====================
+// ==================================================
 
 function searchMovies() {
 
-    const titleKeyword =
-        document
-            .getElementById(
-                "searchTitle"
-            )
-            .value
-            .trim()
-            .toLowerCase();
+    const titleElement =
+        document.getElementById(
+            "searchTitle"
+        );
 
-
-    const director =
+    const directorElement =
         document.getElementById(
             "searchDirector"
-        ).value;
+        );
 
-
-    const country =
+    const countryElement =
         document.getElementById(
             "searchCountry"
-        ).value;
+        );
 
-
-    const yearFromValue =
+    const yearFromElement =
         document.getElementById(
             "searchYearFrom"
-        ).value;
+        );
 
-
-    const yearToValue =
+    const yearToElement =
         document.getElementById(
             "searchYearTo"
-        ).value;
+        );
 
+    const genreElement =
+        document.getElementById(
+            "searchGenre"
+        );
+
+    const tagElement =
+        document.getElementById(
+            "searchTag"
+        );
+
+
+    const titleKeyword =
+        titleElement
+            ? titleElement.value.trim().toLowerCase()
+            : "";
+
+    const director =
+        directorElement
+            ? directorElement.value
+            : "";
+
+    const country =
+        countryElement
+            ? countryElement.value
+            : "";
+
+    const yearFromValue =
+        yearFromElement
+            ? yearFromElement.value
+            : "";
+
+    const yearToValue =
+        yearToElement
+            ? yearToElement.value
+            : "";
 
     const yearFrom =
         yearFromValue === ""
             ? null
             : Number(yearFromValue);
 
-
     const yearTo =
         yearToValue === ""
             ? null
             : Number(yearToValue);
 
-
     const genre =
-        document.getElementById(
-            "searchGenre"
-        ).value;
-
+        genreElement
+            ? genreElement.value
+            : "";
 
     const tag =
-        document.getElementById(
-            "searchTag"
-        ).value;
+        tagElement
+            ? tagElement.value
+            : "";
 
-
-    // --------------------
-    // 年の範囲チェック
-    // --------------------
 
     if (
         yearFrom !== null &&
@@ -1941,204 +1758,176 @@ function searchMovies() {
 
     const results =
         movies.filter(
-            function(movie) {
+            function (movie) {
 
-                // --------------------
-                // 作品名・監督
-                // --------------------
+                const movieTitle =
+                    String(
+                        movie.title || ""
+                    ).toLowerCase();
+
+                const movieDirector =
+                    String(
+                        movie.director || ""
+                    ).toLowerCase();
+
 
                 const titleMatch =
-
                     titleKeyword === "" ||
+                    movieTitle.includes(titleKeyword) ||
+                    movieDirector.includes(titleKeyword);
 
-                    (movie.title || "")
-                        .toLowerCase()
-                        .includes(
-                            titleKeyword
-                        ) ||
-
-                    (movie.director || "")
-                        .toLowerCase()
-                        .includes(
-                            titleKeyword
-                        );
-
-
-                // --------------------
-                // 監督
-                // --------------------
 
                 const directorMatch =
-
                     director === "" ||
+                    movie.director === director;
 
-                    movie.director ===
-                    director;
-
-
-                // --------------------
-                // 制作国
-                // --------------------
 
                 const countryMatch =
-
                     country === "" ||
+                    movie.country === country;
 
-                    movie.country ===
-                    country;
-
-
-                // --------------------
-                // 公開年
-                // --------------------
 
                 const movieYear =
                     Number(movie.year);
 
 
-                const yearMatch =
-
-                    movie.year === "" ||
-
-                    movie.year === null ||
-
-                    movie.year === undefined ||
-
-                    (
-                        (
-                            yearFrom === null ||
-                            movieYear >= yearFrom
-                        ) &&
-
-                        (
-                            yearTo === null ||
-                            movieYear <= yearTo
-                        )
-                    );
+                let yearMatch = true;
 
 
-                // --------------------
-                // ジャンル
-                // --------------------
+                if (
+                    yearFrom !== null ||
+                    yearTo !== null
+                ) {
+
+                    if (
+                        !movie.year ||
+                        isNaN(movieYear)
+                    ) {
+
+                        yearMatch = false;
+
+                    } else {
+
+                        if (
+                            yearFrom !== null &&
+                            movieYear < yearFrom
+                        ) {
+
+                            yearMatch = false;
+
+                        }
+
+                        if (
+                            yearTo !== null &&
+                            movieYear > yearTo
+                        ) {
+
+                            yearMatch = false;
+
+                        }
+
+                    }
+
+                }
+
+
+                const movieGenres =
+                    String(
+                        movie.genre || ""
+                    )
+                        .split(",")
+                        .map(
+                            function (item) {
+
+                                return item.trim();
+
+                            }
+                        );
+
 
                 const genreMatch =
-
                     genre === "" ||
+                    movieGenres.includes(genre);
 
-                    (movie.genre || "")
+
+                const movieTags =
+                    String(
+                        movie.tags || ""
+                    )
                         .split(",")
                         .map(
-                            function(item) {
+                            function (item) {
 
                                 return item.trim();
 
                             }
-                        )
-                        .includes(
-                            genre
                         );
 
-
-                // --------------------
-                // タグ
-                // --------------------
 
                 const tagMatch =
-
                     tag === "" ||
-
-                    (movie.tags || "")
-                        .split(",")
-                        .map(
-                            function(item) {
-
-                                return item.trim();
-
-                            }
-                        )
-                        .includes(
-                            tag
-                        );
+                    movieTags.includes(tag);
 
 
                 return (
-
                     titleMatch &&
-
                     directorMatch &&
-
                     countryMatch &&
-
                     yearMatch &&
-
                     genreMatch &&
-
                     tagMatch
-
                 );
 
             }
         );
 
 
-    displayMovies(
-        results
-    );
+    displayMovies(results);
 
 }
 
 
-// ====================
+// ==================================================
 // 検索リセット
-// ====================
+// ==================================================
 
 function resetSearch() {
 
-    document.getElementById(
-        "searchTitle"
-    ).value = "";
+    const ids = [
 
-
-    document.getElementById(
-        "searchDirector"
-    ).value = "";
-
-
-    document.getElementById(
-        "searchCountry"
-    ).value = "";
-
-
-    document.getElementById(
-        "searchYearFrom"
-    ).value = "";
-
-
-    document.getElementById(
-        "searchYearTo"
-    ).value = "";
-
-
-    document.getElementById(
-        "searchGenre"
-    ).value = "";
-
-
-    document.getElementById(
+        "searchTitle",
+        "searchDirector",
+        "searchCountry",
+        "searchYearFrom",
+        "searchYearTo",
+        "searchGenre",
         "searchTag"
-    ).value = "";
+
+    ];
 
 
-    displayMovies(
-        movies
-    );
+    ids.forEach(function (id) {
+
+        const element =
+            document.getElementById(id);
+
+        if (element) {
+
+            element.value = "";
+
+        }
+
+    });
+
+
+    displayMovies(movies);
 
 }
 
 
-// ====================
+// ==================================================
 // 検索項目更新
-// ====================
+// ==================================================
 
 function updateFilters() {
 
@@ -2147,18 +1936,15 @@ function updateFilters() {
             "searchDirector"
         );
 
-
     const countrySelect =
         document.getElementById(
             "searchCountry"
         );
 
-
     const genreSelect =
         document.getElementById(
             "searchGenre"
         );
-
 
     const tagSelect =
         document.getElementById(
@@ -2178,29 +1964,24 @@ function updateFilters() {
     }
 
 
-    // --------------------
+    // ------------------------------------------
     // 監督
-    // --------------------
+    // ------------------------------------------
 
-    const directors = [
+    const directors =
+        [
+            ...new Set(
+                movies
+                    .map(
+                        function (movie) {
 
-        ...new Set(
+                            return movie.director;
 
-            movies
-
-                .map(
-                    function(movie) {
-
-                        return movie.director;
-
-                    }
-                )
-
-                .filter(Boolean)
-
-        )
-
-    ].sort();
+                        }
+                    )
+                    .filter(Boolean)
+            )
+        ].sort();
 
 
     directorSelect.innerHTML =
@@ -2208,21 +1989,18 @@ function updateFilters() {
 
 
     directors.forEach(
-        function(director) {
+        function (director) {
 
             const option =
                 document.createElement(
                     "option"
                 );
 
-
             option.value =
                 director;
 
-
             option.textContent =
                 director;
-
 
             directorSelect.appendChild(
                 option
@@ -2232,29 +2010,24 @@ function updateFilters() {
     );
 
 
-    // --------------------
+    // ------------------------------------------
     // 制作国
-    // --------------------
+    // ------------------------------------------
 
-    const countries = [
+    const countries =
+        [
+            ...new Set(
+                movies
+                    .map(
+                        function (movie) {
 
-        ...new Set(
+                            return movie.country;
 
-            movies
-
-                .map(
-                    function(movie) {
-
-                        return movie.country;
-
-                    }
-                )
-
-                .filter(Boolean)
-
-        )
-
-    ].sort();
+                        }
+                    )
+                    .filter(Boolean)
+            )
+        ].sort();
 
 
     countrySelect.innerHTML =
@@ -2262,21 +2035,18 @@ function updateFilters() {
 
 
     countries.forEach(
-        function(country) {
+        function (country) {
 
             const option =
                 document.createElement(
                     "option"
                 );
 
-
             option.value =
                 country;
 
-
             option.textContent =
                 country;
-
 
             countrySelect.appendChild(
                 option
@@ -2286,39 +2056,38 @@ function updateFilters() {
     );
 
 
-    // --------------------
+    // ------------------------------------------
     // ジャンル
-    // --------------------
+    // ------------------------------------------
 
-    const genres = [
+    const genres =
+        [
+            ...new Set(
 
-        ...new Set(
+                movies
 
-            movies
+                    .flatMap(
+                        function (movie) {
 
-                .flatMap(
-                    function(movie) {
+                            return String(
+                                movie.genre || ""
+                            ).split(",");
 
-                        return (
-                            movie.genre || ""
-                        ).split(",");
+                        }
+                    )
 
-                    }
-                )
+                    .map(
+                        function (genre) {
 
-                .map(
-                    function(genre) {
+                            return genre.trim();
 
-                        return genre.trim();
+                        }
+                    )
 
-                    }
-                )
+                    .filter(Boolean)
 
-                .filter(Boolean)
-
-        )
-
-    ].sort();
+            )
+        ].sort();
 
 
     genreSelect.innerHTML =
@@ -2326,21 +2095,18 @@ function updateFilters() {
 
 
     genres.forEach(
-        function(genre) {
+        function (genre) {
 
             const option =
                 document.createElement(
                     "option"
                 );
 
-
             option.value =
                 genre;
 
-
             option.textContent =
                 genre;
-
 
             genreSelect.appendChild(
                 option
@@ -2350,39 +2116,38 @@ function updateFilters() {
     );
 
 
-    // --------------------
+    // ------------------------------------------
     // タグ
-    // --------------------
+    // ------------------------------------------
 
-    const tags = [
+    const tags =
+        [
+            ...new Set(
 
-        ...new Set(
+                movies
 
-            movies
+                    .flatMap(
+                        function (movie) {
 
-                .flatMap(
-                    function(movie) {
+                            return String(
+                                movie.tags || ""
+                            ).split(",");
 
-                        return (
-                            movie.tags || ""
-                        ).split(",");
+                        }
+                    )
 
-                    }
-                )
+                    .map(
+                        function (tag) {
 
-                .map(
-                    function(tag) {
+                            return tag.trim();
 
-                        return tag.trim();
+                        }
+                    )
 
-                    }
-                )
+                    .filter(Boolean)
 
-                .filter(Boolean)
-
-        )
-
-    ].sort();
+            )
+        ].sort();
 
 
     tagSelect.innerHTML =
@@ -2390,21 +2155,18 @@ function updateFilters() {
 
 
     tags.forEach(
-        function(tag) {
+        function (tag) {
 
             const option =
                 document.createElement(
                     "option"
                 );
 
-
             option.value =
                 tag;
 
-
             option.textContent =
                 tag;
-
 
             tagSelect.appendChild(
                 option
@@ -2416,9 +2178,9 @@ function updateFilters() {
 }
 
 
-// ====================
+// ==================================================
 // HTMLを安全に表示
-// ====================
+// ==================================================
 
 function escapeHTML(text) {
 
@@ -2453,13 +2215,8 @@ function escapeHTML(text) {
 
 
 // ==================================================
-// 統計機能
+// 統計
 // ==================================================
-
-
-// ====================
-// データ集計
-// ====================
 
 function countMoviesBy(items) {
 
@@ -2467,7 +2224,7 @@ function countMoviesBy(items) {
 
 
     items.forEach(
-        function(item) {
+        function (item) {
 
             if (!item) {
 
@@ -2477,9 +2234,7 @@ function countMoviesBy(items) {
 
 
             counts[item] =
-                (
-                    counts[item] || 0
-                ) + 1;
+                (counts[item] || 0) + 1;
 
         }
     );
@@ -2490,9 +2245,9 @@ function countMoviesBy(items) {
 }
 
 
-// ====================
-// 公開年から年代を取得
-// ====================
+// ==================================================
+// 年代取得
+// ==================================================
 
 function getDecade(year) {
 
@@ -2517,58 +2272,66 @@ function getDecade(year) {
 }
 
 
-// ====================
+// ==================================================
 // 統計グラフ更新
-// ====================
+// ==================================================
 
 function updateStatistics() {
 
-    // ====================
+    if (
+        typeof Chart === "undefined"
+    ) {
+
+        console.warn(
+            "Chart.jsが読み込まれていません。"
+        );
+
+        return;
+
+    }
+
+
+    // ------------------------------------------
     // 監督
-    // ====================
+    // ------------------------------------------
 
     const directorCounts =
         countMoviesBy(
-
             movies.map(
-                function(movie) {
+                function (movie) {
 
                     return movie.director;
 
                 }
             )
-
         );
 
 
-    // ====================
+    // ------------------------------------------
     // 制作国
-    // ====================
+    // ------------------------------------------
 
     const countryCounts =
         countMoviesBy(
-
             movies.map(
-                function(movie) {
+                function (movie) {
 
                     return movie.country;
 
                 }
             )
-
         );
 
 
-    // ====================
+    // ------------------------------------------
     // 公開年代
-    // ====================
+    // ------------------------------------------
 
     const decades =
-
         movies
 
             .map(
-                function(movie) {
+                function (movie) {
 
                     return getDecade(
                         movie.year
@@ -2578,11 +2341,9 @@ function updateStatistics() {
             )
 
             .filter(
-                function(decade) {
+                function (decade) {
 
-                    return (
-                        decade !== null
-                    );
+                    return decade !== null;
 
                 }
             );
@@ -2594,9 +2355,9 @@ function updateStatistics() {
         );
 
 
-    // ====================
+    // ------------------------------------------
     // 監督グラフ
-    // ====================
+    // ------------------------------------------
 
     const directorCanvas =
         document.getElementById(
@@ -2613,18 +2374,6 @@ function updateStatistics() {
         }
 
 
-        const directorLabels =
-            Object.keys(
-                directorCounts
-            );
-
-
-        const directorData =
-            Object.values(
-                directorCounts
-            );
-
-
         directorChart =
             new Chart(
                 directorCanvas,
@@ -2635,7 +2384,9 @@ function updateStatistics() {
                     data: {
 
                         labels:
-                            directorLabels,
+                            Object.keys(
+                                directorCounts
+                            ),
 
                         datasets: [
 
@@ -2645,7 +2396,9 @@ function updateStatistics() {
                                     "鑑賞本数",
 
                                 data:
-                                    directorData
+                                    Object.values(
+                                        directorCounts
+                                    )
 
                             }
 
@@ -2694,9 +2447,9 @@ function updateStatistics() {
     }
 
 
-    // ====================
+    // ------------------------------------------
     // 制作国グラフ
-    // ====================
+    // ------------------------------------------
 
     const countryCanvas =
         document.getElementById(
@@ -2713,18 +2466,6 @@ function updateStatistics() {
         }
 
 
-        const countryLabels =
-            Object.keys(
-                countryCounts
-            );
-
-
-        const countryData =
-            Object.values(
-                countryCounts
-            );
-
-
         countryChart =
             new Chart(
                 countryCanvas,
@@ -2735,7 +2476,9 @@ function updateStatistics() {
                     data: {
 
                         labels:
-                            countryLabels,
+                            Object.keys(
+                                countryCounts
+                            ),
 
                         datasets: [
 
@@ -2745,7 +2488,9 @@ function updateStatistics() {
                                     "鑑賞本数",
 
                                 data:
-                                    countryData
+                                    Object.values(
+                                        countryCounts
+                                    )
 
                             }
 
@@ -2794,9 +2539,9 @@ function updateStatistics() {
     }
 
 
-    // ====================
+    // ------------------------------------------
     // 公開年代グラフ
-    // ====================
+    // ------------------------------------------
 
     const decadeCanvas =
         document.getElementById(
@@ -2814,44 +2559,34 @@ function updateStatistics() {
 
 
         const sortedDecades =
-
             Object.keys(
                 decadeCounts
             )
+                .map(Number)
+                .sort(
+                    function (a, b) {
 
-            .map(Number)
+                        return a - b;
 
-            .sort(
-                function(a, b) {
-
-                    return a - b;
-
-                }
-            );
+                    }
+                );
 
 
         const decadeLabels =
-
             sortedDecades.map(
-                function(decade) {
+                function (decade) {
 
-                    return (
-                        decade +
-                        "年代"
-                    );
+                    return decade + "年代";
 
                 }
             );
 
 
         const decadeData =
-
             sortedDecades.map(
-                function(decade) {
+                function (decade) {
 
-                    return (
-                        decadeCounts[decade]
-                    );
+                    return decadeCounts[decade];
 
                 }
             );
@@ -2929,32 +2664,20 @@ function updateStatistics() {
 
 
 // ==================================================
-// ログイン機能
-// ==================================================
-
-
-// ====================
 // ログイン
-// ====================
+// ==================================================
 
 async function login() {
 
-    const email =
-        document
-            .getElementById(
-                "loginEmail"
-            )
-            .value
-            .trim();
+    const emailElement =
+        document.getElementById(
+            "loginEmail"
+        );
 
-
-    const password =
-        document
-            .getElementById(
-                "loginPassword"
-            )
-            .value;
-
+    const passwordElement =
+        document.getElementById(
+            "loginPassword"
+        );
 
     const errorElement =
         document.getElementById(
@@ -2962,24 +2685,46 @@ async function login() {
         );
 
 
-    errorElement.textContent =
-        "";
+    if (!emailElement || !passwordElement) {
 
-
-    if (!email || !password) {
-
-        errorElement.textContent =
-            "メールアドレスとパスワードを入力してください。";
+        console.error(
+            "ログインフォームが見つかりません。"
+        );
 
         return;
 
     }
 
 
-    const {
-        data,
-        error
-    } =
+    const email =
+        emailElement.value.trim();
+
+    const password =
+        passwordElement.value;
+
+
+    if (errorElement) {
+
+        errorElement.textContent = "";
+
+    }
+
+
+    if (!email || !password) {
+
+        if (errorElement) {
+
+            errorElement.textContent =
+                "メールアドレスとパスワードを入力してください。";
+
+        }
+
+        return;
+
+    }
+
+
+    const result =
         await supabaseClient.auth
             .signInWithPassword({
 
@@ -2990,14 +2735,20 @@ async function login() {
             });
 
 
-    if (error) {
+    if (result.error) {
 
         console.error(
-            error
+            "ログインエラー:",
+            result.error
         );
 
-        errorElement.textContent =
-            "ログインできませんでした。メールアドレスとパスワードを確認してください。";
+
+        if (errorElement) {
+
+            errorElement.textContent =
+                "ログインできませんでした。メールアドレスとパスワードを確認してください。";
+
+        }
 
         return;
 
@@ -3005,46 +2756,35 @@ async function login() {
 
 
     console.log(
-        "ログイン成功",
-        data.user
+        "ログイン成功:",
+        result.data.user
     );
 
 
-    document.getElementById(
-        "loginScreen"
-    ).style.display =
-        "none";
+    showApp();
 
 
-    document.getElementById(
-        "appContent"
-    ).style.display =
-        "block";
-
-
-    loadMovies();
+    await loadMovies();
 
 }
 
 
-// ====================
+// ==================================================
 // ログアウト
-// ====================
+// ==================================================
 
 async function logout() {
 
-    const {
-        error
-    } =
+    const result =
         await supabaseClient.auth
             .signOut();
 
 
-    if (error) {
+    if (result.error) {
 
         console.error(
             "ログアウトエラー:",
-            error
+            result.error
         );
 
         alert(
@@ -3056,64 +2796,128 @@ async function logout() {
     }
 
 
-    document.getElementById(
-        "appContent"
-    ).style.display =
-        "none";
-
-
-    document.getElementById(
-        "loginScreen"
-    ).style.display =
-        "block";
+    hideApp();
 
 }
 
 
-// ====================
-// ログイン状態を確認
-// ====================
+// ==================================================
+// アプリ表示
+// ==================================================
 
-async function checkLogin() {
+function showApp() {
 
-    const {
-        data
-    } =
-        await supabaseClient.auth
-            .getSession();
-
-
-    if (data.session) {
-
+    const loginScreen =
         document.getElementById(
             "loginScreen"
-        ).style.display =
-            "none";
+        );
 
-
+    const appContent =
         document.getElementById(
             "appContent"
-        ).style.display =
+        );
+
+
+    if (loginScreen) {
+
+        loginScreen.style.display =
+            "none";
+
+    }
+
+
+    if (appContent) {
+
+        appContent.style.display =
             "block";
-
-
-        loadMovies();
 
     }
 
 }
 
 
-// ====================
+// ==================================================
+// ログイン画面表示
+// ==================================================
+
+function hideApp() {
+
+    const loginScreen =
+        document.getElementById(
+            "loginScreen"
+        );
+
+    const appContent =
+        document.getElementById(
+            "appContent"
+        );
+
+
+    if (appContent) {
+
+        appContent.style.display =
+            "none";
+
+    }
+
+
+    if (loginScreen) {
+
+        loginScreen.style.display =
+            "block";
+
+    }
+
+}
+
+
+// ==================================================
+// ログイン状態確認
+// ==================================================
+
+async function checkLogin() {
+
+    const result =
+        await supabaseClient.auth
+            .getSession();
+
+
+    if (result.error) {
+
+        console.error(
+            "ログイン状態確認エラー:",
+            result.error
+        );
+
+        hideApp();
+
+        return;
+
+    }
+
+
+    if (result.data.session) {
+
+        showApp();
+
+        await loadMovies();
+
+    } else {
+
+        hideApp();
+
+    }
+
+}
+
+
+// ==================================================
 // Supabaseから映画を取得
-// ====================
+// ==================================================
 
 async function loadMovies() {
 
-    const {
-        data,
-        error
-    } =
+    const result =
         await supabaseClient
             .from("movies")
             .select("*")
@@ -3125,15 +2929,16 @@ async function loadMovies() {
             );
 
 
-    if (error) {
+    if (result.error) {
 
         console.error(
-            "映画データの取得に失敗しました。",
-            error
+            "映画データ取得エラー:",
+            result.error
         );
 
         alert(
-            "映画データを取得できませんでした。"
+            "映画データを取得できませんでした。\n\n" +
+            result.error.message
         );
 
         return;
@@ -3142,23 +2947,92 @@ async function loadMovies() {
 
 
     movies =
-        data || [];
+        result.data || [];
 
 
     updateFilters();
 
-    displayMovies(
-        movies
-    );
+    displayMovies(movies);
 
     updateStatistics();
 
 }
 
 
-// ====================
-// Supabase接続テスト
-// ====================
+// ==================================================
+// Supabase認証状態の変更を監視
+// ==================================================
+
+supabaseClient.auth.onAuthStateChange(
+    function (event, session) {
+
+        console.log(
+            "認証状態変更:",
+            event
+        );
+
+
+        if (session) {
+
+            showApp();
+
+        } else {
+
+            hideApp();
+
+        }
+
+    }
+);
+
+
+// ==================================================
+// HTMLのonclickから呼び出せるようにする
+// ==================================================
+
+window.login =
+    login;
+
+window.logout =
+    logout;
+
+window.addMovie =
+    addMovie;
+
+window.openMovieDetail =
+    openMovieDetail;
+
+window.closeMovieModal =
+    closeMovieModal;
+
+window.openEditModal =
+    openEditModal;
+
+window.saveEdit =
+    saveEdit;
+
+window.closeEditModal =
+    closeEditModal;
+
+window.deleteMovie =
+    deleteMovie;
+
+window.searchMovies =
+    searchMovies;
+
+window.resetSearch =
+    resetSearch;
+
+window.changeSort =
+    changeSort;
+
+window.checkLogin =
+    checkLogin;
+
+
+// ==================================================
+// Supabase接続確認
+// ==================================================
 
 console.log(
     "Supabase接続準備完了",
@@ -3166,8 +3040,8 @@ console.log(
 );
 
 
-// ====================
+// ==================================================
 // アプリ起動
-// ====================
+// ==================================================
 
 checkLogin();
