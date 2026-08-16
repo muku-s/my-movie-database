@@ -1,10 +1,15 @@
+/* ==================================================
+   アプリ非表示
+================================================== */
+
 #appContent {
     display: none;
 }
 
-/* ====================
+
+/* ==================================================
    ログイン画面
-==================== */
+================================================== */
 
 #loginScreen {
     min-height: 100vh;
@@ -15,41 +20,52 @@
     align-items: center;
 
     padding: 20px;
+
     box-sizing: border-box;
 }
 
 #loginScreen .login-box {
     width: 100%;
     max-width: 400px;
+
     margin: 0 auto;
+
     box-sizing: border-box;
 }
 
 .login-box {
     width: 90%;
     max-width: 400px;
+
     padding: 30px;
+
     text-align: center;
 }
 
 .login-box input {
     display: block;
+
     width: 100%;
+
     box-sizing: border-box;
+
     margin: 10px 0;
 }
 
 .login-box button {
     width: 100%;
+
     margin-top: 10px;
 }
 
 #loginError {
     color: red;
 }
-/* ====================
+
+
+/* ==================================================
    全体
-==================== */
+================================================== */
 
 * {
     box-sizing: border-box;
@@ -73,9 +89,9 @@ body {
 }
 
 
-/* ====================
+/* ==================================================
    ヘッダー
-==================== */
+================================================== */
 
 header {
     background: #3b3028;
@@ -105,9 +121,9 @@ header p {
 }
 
 
-/* ====================
+/* ==================================================
    メイン
-==================== */
+================================================== */
 
 main {
     width: min(1000px, 92%);
@@ -116,9 +132,9 @@ main {
 }
 
 
-/* ====================
+/* ==================================================
    セクション
-==================== */
+================================================== */
 
 section {
     background: #fffdf8;
@@ -145,9 +161,9 @@ section h2 {
 }
 
 
-/* ====================
+/* ==================================================
    入力フォーム
-==================== */
+================================================== */
 
 input,
 select,
@@ -191,9 +207,9 @@ textarea:focus {
 }
 
 
-/* ====================
+/* ==================================================
    検索
-==================== */
+================================================== */
 
 .filters {
     display: grid;
@@ -217,9 +233,9 @@ textarea:focus {
 }
 
 
-/* ====================
+/* ==================================================
    ボタン
-==================== */
+================================================== */
 
 button {
     border: none;
@@ -260,9 +276,9 @@ button:active {
 }
 
 
-/* ====================
+/* ==================================================
    映画一覧
-==================== */
+================================================== */
 
 .list-header {
     display: flex;
@@ -283,9 +299,9 @@ button:active {
 }
 
 
-/* ====================
+/* ==================================================
    映画一覧 開閉ボタン
-==================== */
+================================================== */
 
 .movie-list-toggle {
     border: none;
@@ -320,9 +336,11 @@ button:active {
 
     color: #3b3028;
 }
-/* ====================
+
+
+/* ==================================================
    映画一覧ヘッダー
-==================== */
+================================================== */
 
 .movie-list-left {
     display: flex;
@@ -333,9 +351,9 @@ button:active {
 }
 
 
-/* ====================
+/* ==================================================
    並び替え
-==================== */
+================================================== */
 
 .movie-sort {
     padding: 7px 12px;
@@ -358,4 +376,299 @@ button:active {
     outline: none;
 
     border-color: #9a7659;
+}
+
+
+/* ==================================================
+   映画カード
+================================================== */
+
+.movie-card {
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    padding: 15px;
+
+    margin-bottom: 12px;
+
+    background: #fffdf8;
+
+    border:
+        1px solid #d8cbb9;
+
+    border-radius: 8px;
+
+    cursor: pointer;
+
+    transition:
+        background 0.15s,
+        transform 0.1s;
+}
+
+.movie-card:hover {
+    background: #f8f1e7;
+
+    transform: translateY(-1px);
+}
+
+
+/* ==================================================
+   映画一覧ポスター
+================================================== */
+
+/*
+   一覧画面では、
+   どんな画像でも必ず50×70pxに統一します。
+*/
+
+.movie-poster {
+    width: 50px !important;
+    height: 70px !important;
+
+    min-width: 50px !important;
+    max-width: 50px !important;
+
+    min-height: 70px !important;
+    max-height: 70px !important;
+
+    object-fit: cover;
+
+    object-position: center;
+
+    border-radius: 3px;
+
+    background: #ded3c5;
+
+    flex-shrink: 0;
+
+    display: block;
+}
+
+
+/* ==================================================
+   ポスターなし
+================================================== */
+
+.movie-poster-empty {
+    width: 50px;
+    height: 70px;
+
+    min-width: 50px;
+    max-width: 50px;
+
+    min-height: 70px;
+    max-height: 70px;
+
+    background: #ded3c5;
+
+    border-radius: 3px;
+
+    flex-shrink: 0;
+}
+
+
+/* ==================================================
+   映画カード内容
+================================================== */
+
+.movie-card-content {
+    min-width: 0;
+
+    flex: 1;
+}
+
+.movie-card-content h3 {
+    margin: 0 0 5px;
+
+    color: #3b3028;
+
+    font-size: 18px;
+}
+
+.movie-info {
+    font-size: 13px;
+
+    color: #766556;
+}
+
+.movie-rating {
+    color: #9a7659;
+
+    margin-top: 5px;
+
+    letter-spacing: 1px;
+}
+
+
+/* ==================================================
+   映画詳細
+================================================== */
+
+.detail-layout {
+    display: flex;
+
+    gap: 25px;
+
+    align-items: flex-start;
+}
+
+.detail-poster {
+    width: 180px;
+    height: 250px;
+
+    min-width: 180px;
+    max-width: 180px;
+
+    min-height: 250px;
+    max-height: 250px;
+
+    object-fit: cover;
+
+    object-position: center;
+
+    border-radius: 5px;
+
+    background: #ded3c5;
+
+    display: block;
+}
+
+.detail-info {
+    flex: 1;
+
+    min-width: 0;
+}
+
+.detail-info h2 {
+    margin-top: 0;
+
+    color: #3b3028;
+}
+
+.detail-memo {
+    margin-top: 25px;
+
+    padding-top: 20px;
+
+    border-top:
+        1px solid #d8cbb9;
+
+    white-space: pre-wrap;
+}
+
+
+/* ==================================================
+   編集・削除ボタン
+================================================== */
+
+.edit-button {
+    margin-top: 20px;
+
+    margin-right: 8px;
+}
+
+.delete-button {
+    margin-top: 20px;
+
+    background: #8a4f43;
+}
+
+.delete-button:hover {
+    background: #6f3d34;
+}
+
+
+/* ==================================================
+   スマートフォン
+================================================== */
+
+@media (max-width: 600px) {
+
+    header {
+        padding: 30px 15px;
+    }
+
+    header h1 {
+        font-size: 24px;
+
+        letter-spacing: 2px;
+    }
+
+    main {
+        width: 94%;
+
+        margin: 25px auto;
+    }
+
+    section {
+        padding: 20px;
+
+        margin-bottom: 20px;
+    }
+
+    .filters {
+        grid-template-columns: 1fr;
+
+        gap: 10px;
+    }
+
+    .movie-list-left {
+        gap: 8px;
+
+        flex-wrap: wrap;
+    }
+
+    .movie-sort {
+        font-size: 13px;
+
+        padding: 6px 8px;
+    }
+
+    .movie-card {
+        gap: 12px;
+
+        padding: 12px;
+    }
+
+    .movie-poster {
+        width: 50px !important;
+        height: 70px !important;
+
+        min-width: 50px !important;
+        max-width: 50px !important;
+
+        min-height: 70px !important;
+        max-height: 70px !important;
+    }
+
+    .movie-poster-empty {
+        width: 50px;
+        height: 70px;
+
+        min-width: 50px;
+        max-width: 50px;
+    }
+
+    .movie-card-content h3 {
+        font-size: 16px;
+    }
+
+    .detail-layout {
+        flex-direction: column;
+    }
+
+    .detail-poster {
+        width: 160px;
+        height: 220px;
+
+        min-width: 160px;
+        max-width: 160px;
+
+        min-height: 220px;
+        max-height: 220px;
+    }
+
 }

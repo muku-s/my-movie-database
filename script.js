@@ -144,6 +144,7 @@ function changeSort(sortType) {
     currentSort = sortType;
 
     displayMovies(movies);
+
 }
 
 
@@ -236,7 +237,8 @@ async function uploadPoster(file) {
         "." +
         extension;
 
-    const filePath = fileName;
+    const filePath =
+        fileName;
 
     const result =
         await supabaseClient
@@ -692,12 +694,12 @@ async function displayMovies(movieList) {
         // ポスター
         // ------------------------------------------
 
-        let detailPosterUrl = "";
+        let posterUrl = "";
 
 
         if (movie.poster) {
 
-            detailPosterUrl =
+            posterUrl =
                 await getPosterUrl(
                     movie.poster
                 );
@@ -708,17 +710,22 @@ async function displayMovies(movieList) {
         let posterHTML = "";
 
 
-        if (detailPosterUrl) {
+        if (posterUrl) {
 
             posterHTML =
-                '<img src="' +
-                escapeHTML(detailPosterUrl) +
-                '" class="detail-poster">';
+                '<img ' +
+                'src="' +
+                escapeHTML(posterUrl) +
+                '" ' +
+                'class="movie-poster" ' +
+                'alt="' +
+                escapeHTML(movie.title || "") +
+                '">';
 
         } else {
 
             posterHTML =
-                '<div class="detail-poster"></div>';
+                '<div class="movie-poster-empty"></div>';
 
         }
 
@@ -865,7 +872,11 @@ async function openMovieDetail(id) {
         posterHTML =
             '<img src="' +
             escapeHTML(detailPosterUrl) +
-            '" class="detail-poster">';
+            '" ' +
+            'class="detail-poster" ' +
+            'alt="' +
+            escapeHTML(movie.title || "") +
+            '">';
 
     } else {
 
@@ -1176,7 +1187,9 @@ async function saveEdit() {
         getValue("editDirector");
 
     const yearElement =
-        document.getElementById("editYear");
+        document.getElementById(
+            "editYear"
+        );
 
     const year =
         yearElement
@@ -1187,7 +1200,9 @@ async function saveEdit() {
         getValue("editCountry");
 
     const dateElement =
-        document.getElementById("editDate");
+        document.getElementById(
+            "editDate"
+        );
 
     const dateValue =
         dateElement
@@ -1200,7 +1215,9 @@ async function saveEdit() {
             : dateValue;
 
     const ratingElement =
-        document.getElementById("editRating");
+        document.getElementById(
+            "editRating"
+        );
 
     const ratingValue =
         ratingElement
@@ -2763,7 +2780,6 @@ async function login() {
 
     showApp();
 
-
     await loadMovies();
 
 }
@@ -2987,6 +3003,65 @@ supabaseClient.auth.onAuthStateChange(
 
 
 // ==================================================
+// 映画一覧の開閉
+// ==================================================
+
+function toggleMovieList() {
+
+    const content =
+        document.getElementById(
+            "movieListContent"
+        );
+
+    const arrow =
+        document.getElementById(
+            "movieListArrow"
+        );
+
+
+    if (!content) {
+
+        console.error(
+            "movieListContent が見つかりません"
+        );
+
+        return;
+
+    }
+
+
+    if (
+        content.style.display === "none"
+    ) {
+
+        content.style.display =
+            "block";
+
+        if (arrow) {
+
+            arrow.textContent =
+                "▼";
+
+        }
+
+    } else {
+
+        content.style.display =
+            "none";
+
+        if (arrow) {
+
+            arrow.textContent =
+                "▶";
+
+        }
+
+    }
+
+}
+
+
+// ==================================================
 // HTMLのonclickから呼び出せるようにする
 // ==================================================
 
@@ -3029,6 +3104,9 @@ window.changeSort =
 window.checkLogin =
     checkLogin;
 
+window.toggleMovieList =
+    toggleMovieList;
+
 
 // ==================================================
 // Supabase接続確認
@@ -3045,84 +3123,3 @@ console.log(
 // ==================================================
 
 checkLogin();
-// ====================
-// 映画一覧の開閉
-// ====================
-
-function toggleMovieList() {
-
-    const content =
-        document.getElementById(
-            "movieListContent"
-        );
-
-    const arrow =
-        document.getElementById(
-            "movieListArrow"
-        );
-
-    if (!content) {
-        return;
-    }
-
-    if (
-        content.style.display === "none"
-    ) {
-
-        content.style.display = "block";
-
-        if (arrow) {
-            arrow.textContent = "▼";
-        }
-
-    } else {
-
-        content.style.display = "none";
-
-        if (arrow) {
-            arrow.textContent = "▶";
-        }
-
-    }
-
-}
-// ====================
-// 映画一覧の開閉
-// ====================
-
-window.toggleMovieList = function () {
-
-    const content =
-        document.getElementById("movieListContent");
-
-    const arrow =
-        document.getElementById("movieListArrow");
-
-    if (!content) {
-
-        console.error(
-            "movieListContent が見つかりません"
-        );
-
-        return;
-    }
-
-    if (content.style.display === "none") {
-
-        content.style.display = "block";
-
-        if (arrow) {
-            arrow.textContent = "▼";
-        }
-
-    } else {
-
-        content.style.display = "none";
-
-        if (arrow) {
-            arrow.textContent = "▶";
-        }
-
-    }
-
-};
