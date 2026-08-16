@@ -639,7 +639,7 @@ button:active {
 
 .movie-list-toggle {
     border: none;
-    background: none;
+    background: transparent;
     padding: 0;
     margin: 0;
 
@@ -650,6 +650,8 @@ button:active {
     font-size: 24px;
     font-weight: bold;
 
+    color: #333333;
+
     cursor: pointer;
 }
 
@@ -659,4 +661,5 @@ button:active {
 
 #movieListArrow {
     font-size: 16px;
+    color: #333333;
 }

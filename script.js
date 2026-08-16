@@ -3099,9 +3099,11 @@ window.toggleMovieList = function () {
         document.getElementById("movieListArrow");
 
     if (!content) {
+
         console.error(
             "movieListContent が見つかりません"
         );
+
         return;
     }
 
