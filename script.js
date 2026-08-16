@@ -3045,3 +3045,44 @@ console.log(
 // ==================================================
 
 checkLogin();
+// ====================
+// 映画一覧の開閉
+// ====================
+
+function toggleMovieList() {
+
+    const content =
+        document.getElementById(
+            "movieListContent"
+        );
+
+    const arrow =
+        document.getElementById(
+            "movieListArrow"
+        );
+
+    if (!content) {
+        return;
+    }
+
+    if (
+        content.style.display === "none"
+    ) {
+
+        content.style.display = "block";
+
+        if (arrow) {
+            arrow.textContent = "▼";
+        }
+
+    } else {
+
+        content.style.display = "none";
+
+        if (arrow) {
+            arrow.textContent = "▶";
+        }
+
+    }
+
+}

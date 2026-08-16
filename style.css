@@ -633,3 +633,30 @@ button:active {
     }
 
 }
+/* ====================
+   映画一覧 開閉ボタン
+==================== */
+
+.movie-list-toggle {
+    border: none;
+    background: none;
+    padding: 0;
+    margin: 0;
+
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    font-size: 24px;
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+.movie-list-toggle:hover {
+    opacity: 0.7;
+}
+
+#movieListArrow {
+    font-size: 16px;
+}

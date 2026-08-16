@@ -260,24 +260,36 @@
 
 
 
-        <!-- ====================
-             映画一覧
-        ==================== -->
+<!-- ====================
+     映画一覧
+==================== -->
 
-        <section class="movie-list">
+<section class="movie-list">
 
+    <div class="list-header">
 
-<div class="list-header">
+        <button
+            type="button"
+            class="movie-list-toggle"
+            onclick="toggleMovieList()"
+        >
+            <span id="movieListArrow">▼</span>
+            <span>映画一覧</span>
+        </button>
 
-    <h2>
-        映画一覧
-    </h2>
+        <span id="movieCount">
+            0作品
+        </span>
 
-    <span id="movieCount">
-        0作品
-    </span>
+    </div>
 
-</div>
+    <div id="movieListContent">
+
+        <div id="movieContainer"></div>
+
+    </div>
+
+</section>
 
 
 <div class="sort-area">
